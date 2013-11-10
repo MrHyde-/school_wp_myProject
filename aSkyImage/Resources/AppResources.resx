@@ -120,4 +120,7 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>aSkyImage</value>
   </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>SkyDrive Login</value>
+  </data>
 </root>
