@@ -3,6 +3,7 @@ using System.Windows.Navigation;
 using Microsoft.Live;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using aSkyImage.ViewModel;
 
 namespace aSkyImage
 {
@@ -18,6 +19,19 @@ namespace aSkyImage
             set
             {
                 _liveSession = value;
+            }
+        }
+
+        private static LiveServices _viewModel;
+        public static LiveServices ViewModel
+        {
+            get
+            {
+                // Delay creation of the view model until necessary
+                if (_viewModel == null)
+                    _viewModel = new LiveServices();
+
+                return _viewModel;
             }
         }
         /// <summary>
