@@ -18,7 +18,7 @@ namespace aSkyImage
             if (e.Status == LiveConnectSessionStatus.Connected)
             {
                 App.LiveSession = e.Session;
-                NavigationService.Navigate(new Uri("/View/AlbumPage.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
             }
         }
     }

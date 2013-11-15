@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace aSkyImage.UserControls
 {
@@ -30,13 +22,24 @@ namespace aSkyImage.UserControls
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            Popup thisPopup = this.Parent as Popup;
+
+            if (thisPopup != null)
+            {
+                thisPopup.VerticalOffset = 10d;
+            }
             PromptTitle.Text = _caption;
         }
 
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
         {
+            ClosePopup();
+        }
+
+        private void ClosePopup()
+        {
             Popup thisPopup = this.Parent as Popup;
-            
+
             if (thisPopup != null)
             {
                 thisPopup.IsOpen = false;
@@ -50,7 +53,9 @@ namespace aSkyImage.UserControls
                 //say no no you bloody API8
                 return;
             }
+            
             App.ViewModel.CreateAlbum(TextBoxUserInput.Text);
+            ClosePopup();
         }
     }
 }

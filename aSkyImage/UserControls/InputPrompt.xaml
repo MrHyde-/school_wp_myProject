@@ -7,10 +7,10 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    d:DesignHeight="480" d:DesignWidth="480">
+    d:DesignHeight="200" d:DesignWidth="480">
 
     <StackPanel x:Name="LayoutRoot" Orientation="Vertical" Background="{StaticResource PhoneBackgroundBrush}">
-        <TextBlock x:Name="PromptTitle" Text="title"  Style="{StaticResource PhoneTextTitle2Style}"/>
+        <TextBlock x:Name="PromptTitle" Text="DesignTimeText"  Style="{StaticResource PhoneTextTitle2Style}" Margin="10,10,0,0"/>
         <TextBox x:Name="TextBoxUserInput" Text="input"/>
         <StackPanel x:Name="Buttons" Orientation="Horizontal">
             <Button x:Name="ButtonOk" Content="OK" Width="150" Click="ButtonOk_OnClick"/>
