@@ -22,27 +22,25 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=AppResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="albumName" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <StackPanel x:Name="StackPanelImages" Margin="2">
-            <ListBox x:Name="PhotoListBox" SelectionChanged="PhotoListBox_SelectionChanged" SelectedItem="{Binding SelectedPhoto, Mode=TwoWay}"  Margin="0,0,-12,0" ItemsSource="{Binding SelectedAlbum.Photos}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
-                            <!--Replace rectangle with image-->
-                            <Image Source="{Binding PhotoUrl}" Height="100" Width="100"  Margin="12,0,9,0"/>
-                            <StackPanel Width="311">
-                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
-                            </StackPanel>
+        <ListBox Grid.Row="1" x:Name="PhotoListBox" SelectionChanged="PhotoListBox_SelectionChanged" SelectedItem="{Binding SelectedPhoto, Mode=TwoWay}"  Margin="0,0,0,0" ItemsSource="{Binding SelectedAlbum.Photos}" Height="530">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
+                        <!--Replace rectangle with image-->
+                        <Image Source="{Binding PhotoUrl}" Height="100" Width="100"  Margin="12,0,9,0"/>
+                        <StackPanel Width="311">
+                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="12,12,0,0" FontSize="{StaticResource PhoneFontSizeMedium}" />
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" FontSize="{StaticResource PhoneFontSizeSmall}"/>
                         </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
  
     <!--ApplicationBar for album page-->
@@ -50,6 +48,7 @@
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/upload.png" Text="Upload" x:Name="AppIconUpload" Click="AppIconUpload_OnClick"/>
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/download.png" Text="Download" x:Name="AppIconDownload" Click="AppIconDownload_OnClick"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Appbar/download.png" Text="Download" x:Name="AppIconShowImage" Click="AppIconShowImage_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

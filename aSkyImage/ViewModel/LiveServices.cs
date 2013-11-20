@@ -181,10 +181,17 @@ namespace aSkyImage.ViewModel
                 uploadClient.BackgroundUploadCompleted += uploadClient_BackgroundUploadCompleted;
 
                 string userState = "myUserState";  // arbitrary string to identify the request.
-                if (Albums.Count > 0)
+                
+                if(SelectedAlbum == null)
                 {
-                    SelectedAlbum = Albums[0];
+                    if (Albums.Count > 0)
+                    {
+                        SelectedAlbum = Albums[0];
+                    }
                 }
+
+                MessageBox.Show(String.Format("Uploading image to album: {0}", SelectedAlbum.Title));
+
                 uploadClient.BackgroundUploadAsync(SelectedAlbum.ID, new Uri(uploadLocation, UriKind.RelativeOrAbsolute), OverwriteOption.Rename, userState);
             };
 
@@ -195,7 +202,7 @@ namespace aSkyImage.ViewModel
         {
             if (e.Error == null)
             {
-                MessageBox.Show("Image uploading", "Done", MessageBoxButton.OK);
+                MessageBox.Show("Image uploaded");
                 Deployment.Current.Dispatcher.BeginInvoke(() => DownloadPictures(SelectedAlbum));
             }
         }
@@ -319,12 +326,6 @@ namespace aSkyImage.ViewModel
             LiveConnectClient downloadClient = new LiveConnectClient(App.LiveSession);
             downloadClient.DownloadCompleted += DownloadClientOnDownloadCompleted;
             downloadClient.DownloadAsync(SelectedPhoto.ID + "/content");
-            //downloadClient.BackgroundDownloadCompleted += downloadClient_BackgroundDownloadCompleted;
-
-            //string path = SelectedPhoto.ID + "/content";
-            //Uri downloadLocation = new Uri("/shared/transfers/" + SelectedPhoto.Title, UriKind.RelativeOrAbsolute);
-            //string userState = SelectedPhoto.ID;  // arbitrary string to uniquely identify the request.
-            //downloadClient.BackgroundDownloadAsync(path, downloadLocation, userState);
         }
 
         private void DownloadClientOnDownloadCompleted(object sender, LiveDownloadCompletedEventArgs e)
@@ -332,7 +333,8 @@ namespace aSkyImage.ViewModel
             if (e.Result != null)
             {
                 MediaLibrary mediaLibrary = new MediaLibrary();
-                mediaLibrary.SavePicture(SelectedPhoto.Title, e.Result);    
+                mediaLibrary.SavePicture(SelectedPhoto.Title, e.Result);
+                MessageBox.Show(String.Format("Photo {0} downloaded to your phone.", SelectedPhoto.Title));
             }
         }
     }
