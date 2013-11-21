@@ -18,6 +18,8 @@ namespace aSkyImage
             if (e.Status == LiveConnectSessionStatus.Connected)
             {
                 App.LiveSession = e.Session;
+
+                //check if tombstone
                 NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
             }
         }

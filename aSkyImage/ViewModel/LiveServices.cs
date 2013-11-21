@@ -254,15 +254,20 @@ namespace aSkyImage.ViewModel
         {
             if (SelectedAlbum != null)
             {
-                LiveConnectClient clientAlbum = new LiveConnectClient(App.LiveSession);
-                clientAlbum.GetCompleted += clientAlbum_GetCompleted;
-                clientAlbum.GetAsync(SelectedAlbum.ID + "/files");
+                if (AlbumDataLoaded == false)
+                {
+                    LiveConnectClient clientAlbum = new LiveConnectClient(App.LiveSession);
+                    clientAlbum.GetCompleted += clientAlbum_GetCompleted;
+                    clientAlbum.GetAsync(SelectedAlbum.ID + "/files");
+                }
             }
             else
             {
                 MessageBox.Show("Problem with selected album..");
             }
         }
+
+        public bool AlbumDataLoaded { get; set; }
 
         private void clientAlbum_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
@@ -295,6 +300,8 @@ namespace aSkyImage.ViewModel
                 if (i++ > 10)
                     break;
             }
+
+            AlbumDataLoaded = true;
         }
 
         private SkydrivePhoto _selectedPhoto;

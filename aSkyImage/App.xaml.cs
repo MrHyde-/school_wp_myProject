@@ -9,6 +9,9 @@ namespace aSkyImage
 {
     public partial class App : Application
     {
+        public static string SelectedAlbumKey = "aSkyImageSelectedAlbum";
+        public static string SelectedAlbumPhotosKey = "aSkyImageSelectedAlbumPhotos";
+
         private static LiveConnectSession _liveSession;
         public static LiveConnectSession LiveSession
         {

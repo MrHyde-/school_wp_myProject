@@ -48,7 +48,8 @@
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/upload.png" Text="Upload" x:Name="AppIconUpload" Click="AppIconUpload_OnClick"/>
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/download.png" Text="Download" x:Name="AppIconDownload" Click="AppIconDownload_OnClick"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/Appbar/download.png" Text="Download" x:Name="AppIconShowImage" Click="AppIconShowImage_OnClick"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Appbar/zoom.png" Text="ZoomImage" x:Name="AppIconShowImage" Click="AppIconShowImage_OnClick"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Appbar/pin.png" Text="PinAlbum" x:Name="AppIconPin" Click="AppIconPin_OnClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

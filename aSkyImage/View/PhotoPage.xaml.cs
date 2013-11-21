@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 
 namespace aSkyImage.View
@@ -22,13 +13,34 @@ namespace aSkyImage.View
             Loaded += PhotoPage_Loaded;
         }
 
-        void PhotoPage_Loaded(object sender, RoutedEventArgs e)
+        private void PhotoPage_Loaded(object sender, RoutedEventArgs e)
         {
             if (App.ViewModel.SelectedPhoto != null)
             {
                 ImageUsersImage.Source = new BitmapImage(new Uri(App.ViewModel.SelectedPhoto.PhotoUrl, UriKind.RelativeOrAbsolute));
-                
-                //tweak width length to show max at screen..
+            }
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            //before loading we have to make sure we have LiveSession
+            if (App.LiveSession == null)
+            {
+                //need to go to the mainpage for login event..
+                NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+            }
+        }
+
+        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            // If this is a back navigation, the page will be discarded, so there
+            // is no need to save state.
+            if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
+            {
+                // Save the Session variable in the page's State dictionary.
+
             }
         }
     }

@@ -18,6 +18,15 @@ namespace aSkyImage.View
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            //before loading we have to make sure we have LiveSession
+            if (App.LiveSession == null)
+            {
+                //need to go to the mainpage for login event..
+                NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                return;
+            }
+
             App.ViewModel.LoadData();
             DataContext = App.ViewModel;
         }
@@ -26,6 +35,7 @@ namespace aSkyImage.View
         {
             if (App.ViewModel.SelectedAlbum != null)
             {
+                App.ViewModel.AlbumDataLoaded = false;
                 NavigationService.Navigate(new Uri("/View/AlbumPage.xaml", UriKind.Relative));
             }
         }

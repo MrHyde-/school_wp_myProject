@@ -16,7 +16,7 @@ namespace aSkyImage.ViewModel
         /// <summary>
         /// A collection for ItemViewModel objects.
         /// </summary>
-        public ObservableCollection<SkydrivePhoto> Photos { get; private set; }
+        public ObservableCollection<SkydrivePhoto> Photos { get; set; }
 
         private string _id = string.Empty;
         public string ID
