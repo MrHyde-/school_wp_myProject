@@ -2,38 +2,43 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.IO.IsolatedStorage;
+using System.Text;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using Microsoft.Live;
 using Microsoft.Phone.Tasks;
 using Microsoft.Xna.Framework.Media;
+using aSkyImage.Model;
 
 namespace aSkyImage.ViewModel
 {
     public class LiveServices
     {
-        public ObservableCollection<SkydriveAlbum> Albums { get; private set; }
+        public ObservableCollection<SkyDriveAlbum> Albums { get; set; }
 
         public LiveServices()
         {
-            this.Albums = new ObservableCollection<SkydriveAlbum>(); 
+            this.Albums = new ObservableCollection<SkyDriveAlbum>(); 
         }
+
         /// <summary>
         /// Creates and adds a few ItemViewModel objects into the Items collection.
         /// </summary>
         public void LoadData()
         {
-            //GetProfileData();
             GetAlbumData();
             this.IsDataLoaded = true;
         }
 
         private void GetAlbumData()
         {
-            LiveConnectClient clientFolder = new LiveConnectClient(App.LiveSession);
-            clientFolder.GetCompleted += clientFolder_GetCompleted;
-            clientFolder.GetAsync("/me/albums");
+            if (IsDataLoaded == false)
+            {
+                LiveConnectClient clientFolder = new LiveConnectClient(App.LiveSession);
+                clientFolder.GetCompleted += clientFolder_GetCompleted;
+                clientFolder.GetAsync("/me/albums");
+            }
         }
 
         private void clientFolder_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
@@ -44,34 +49,45 @@ namespace aSkyImage.ViewModel
                 return;
             }
 
-            List<object> data = (List<object>)e.Result["data"];
-
             Albums.Clear();
 
-            foreach (IDictionary<string, object> album in data)
+            string jsonString = e.RawResult;
+
+            //load into memory stream
+            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(jsonString)))
             {
-                SkydriveAlbum albumItem = new SkydriveAlbum();
-                albumItem.Title = (string)album["name"];
+                //parse into jsonser
+                // note that to using System.Runtime.Serialization.Json
+                // need to add reference System.Servicemodel.Web
+                var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(SkyDriveAlbumList));
+                try
+                {
+                    var list = (SkyDriveAlbumList)ser.ReadObject(ms);
+                    //Albums = list.SkyDriveAlbums;
 
-                albumItem.Description = (string)album["description"];
-                albumItem.ID = (string)album["id"];
-
-                Albums.Add(albumItem);
-                GetAlbumPicture(albumItem);
-                //DownloadPictures(albumItem);
+                    foreach (var album in list.SkyDriveAlbums)
+                    {
+                        Albums.Add(album);
+                        GetAlbumPicture(album);
+                    }
+                }
+                catch (Exception je)
+                {
+                    System.Diagnostics.Debug.WriteLine("--- " + je.Message);
+                }
             }
-
-            //set current folder to selectedAlbum
+            
+            OnDataLoaded();
         }
 
         protected bool IsDataLoaded { get; set; }
 
-        private SkydriveAlbum _selectedAlbum;
+        private SkyDriveAlbum _selectedAlbum;
         /// <summary>
         /// Sample ViewModel property; this property is used in the view to display its value using a Binding
         /// </summary>
         /// <returns></returns>
-        public SkydriveAlbum SelectedAlbum
+        public SkyDriveAlbum SelectedAlbum
         {
             get
             {
@@ -99,18 +115,24 @@ namespace aSkyImage.ViewModel
 
         #endregion
 
-        private void GetAlbumPicture(SkydriveAlbum albumItem)
+        private void GetAlbumPicture(SkyDriveAlbum albumItem)
         {
-            LiveConnectClient albumPictureClient = new LiveConnectClient(App.LiveSession);
-            albumPictureClient.GetCompleted += albumPictureClient_GetCompleted;
-            albumPictureClient.GetAsync(albumItem.ID + "/picture", albumItem);
+            if (albumItem != null)
+            {
+                if(String.IsNullOrEmpty(albumItem.ID) == false)
+                {
+                    LiveConnectClient albumPictureClient = new LiveConnectClient(App.LiveSession);
+                    albumPictureClient.GetCompleted += albumPictureClient_GetCompleted;
+                    albumPictureClient.GetAsync(albumItem.ID + "/picture?type=thumbnail", albumItem);
+                }
+            }
         }
 
-        void albumPictureClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
+        private void albumPictureClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error == null)
             {
-                SkydriveAlbum album = (SkydriveAlbum)e.UserState;
+                SkyDriveAlbum album = (SkyDriveAlbum)e.UserState;
                 album.AlbumPicture = (string)e.Result["location"];
             }
         }
@@ -128,28 +150,46 @@ namespace aSkyImage.ViewModel
         {
             if (e.Error == null)
             {
-                //prompt user creating completed
+                string newAlbumJson = e.RawResult;
+                InsertNewAlbumToAlbumsCollection(newAlbumJson);
                 MessageBox.Show("Album created", "Done", MessageBoxButton.OK);
-                
-                //TODO
-                //from result fetch new album id
+            }
+        }
 
-                //add it to albums
+        private void InsertNewAlbumToAlbumsCollection(string newAlbumJson)
+        {
+            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(newAlbumJson)))
+            {
+                //parse into jsonser
+                // note that to using System.Runtime.Serialization.Json
+                // need to add reference System.Servicemodel.Web
+                var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(SkyDriveAlbum));
+                try
+                {
+                    var newAlbum = (SkyDriveAlbum)ser.ReadObject(ms);
 
-                //refresh data..
-                LoadData();
+                    if (String.IsNullOrEmpty(newAlbum.ID) == false)
+                    {
+                        newAlbum.Photos = new ObservableCollection<SkyDrivePhoto>();
+                        Albums.Insert(0, newAlbum);
+                    }
+                }
+                catch (Exception je)
+                {
+                    System.Diagnostics.Debug.WriteLine("--- " + je.Message);
+                }
             }
         }
 
         internal void Upload()
         {
-            PhotoChooserTask task = new PhotoChooserTask();
-            task.ShowCamera = true;
-            task.Completed += task_Completed;
-            task.Show();
+            PhotoChooserTask photoChooserTask = new PhotoChooserTask();
+            photoChooserTask.ShowCamera = true;
+            photoChooserTask.Completed += photoChooserTask_Completed;
+            photoChooserTask.Show();
         }
 
-        void task_Completed(object sender, PhotoResult e)
+        private void photoChooserTask_Completed(object sender, PhotoResult e)
         {
             if (e.ChosenPhoto == null)
             {
@@ -207,50 +247,17 @@ namespace aSkyImage.ViewModel
             }
         }
 
-        private void DownloadPictures(SkydriveAlbum albumItem)
+        private void DownloadPictures(SkyDriveAlbum albumItem)
         {
             if (albumItem != null)
             {
-                LiveConnectClient folderListClient = new LiveConnectClient(App.LiveSession);
-                folderListClient.GetCompleted += folderListClient_GetCompleted;
-                folderListClient.GetAsync(albumItem.ID + "/files", albumItem);
+                SelectedAlbum = albumItem;
+                AlbumDataLoaded = false;
+                LoadAlbumData();
             }
         }
 
-        void folderListClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                return;
-            }
-
-            int i = 0;
-            SkydriveAlbum album = (SkydriveAlbum)e.UserState;
-
-            album.Photos.Clear();
-            List<object> data = (List<object>)e.Result["data"];
-
-            foreach (IDictionary<string, object> photo in data)
-            {
-                var item = new SkydrivePhoto();
-                item.Title = (string)photo["name"];
-                item.Subtitle = (string)photo["name"];
-
-                item.PhotoUrl = (string)photo["source"];
-                item.Description = (string)photo["description"];
-                item.ID = (string)photo["id"];
-
-                if (album != null)
-                {
-                    album.Photos.Add(item);
-                }
-                // Stop after downloaing 10 imates
-                if (i++ > 10)
-                    break;
-            }
-        }
-
-        public void LoadAlbumData()
+        internal void LoadAlbumData()
         {
             if (SelectedAlbum != null)
             {
@@ -258,7 +265,7 @@ namespace aSkyImage.ViewModel
                 {
                     LiveConnectClient clientAlbum = new LiveConnectClient(App.LiveSession);
                     clientAlbum.GetCompleted += clientAlbum_GetCompleted;
-                    clientAlbum.GetAsync(SelectedAlbum.ID + "/files");
+                    clientAlbum.GetAsync(SelectedAlbum.ID + "/photos?type=album");
                 }
             }
             else
@@ -267,7 +274,7 @@ namespace aSkyImage.ViewModel
             }
         }
 
-        public bool AlbumDataLoaded { get; set; }
+        internal bool AlbumDataLoaded { get; set; }
 
         private void clientAlbum_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
@@ -276,40 +283,66 @@ namespace aSkyImage.ViewModel
                 return;
             }
 
-            int i = 0;
-            SkydriveAlbum album = SelectedAlbum;
+            SkyDriveAlbum album = SelectedAlbum;
 
             album.Photos.Clear();
-            List<object> data = (List<object>)e.Result["data"];
+            var photosJson = e.RawResult;
 
-            foreach (IDictionary<string, object> photo in data)
+            //load into memory stream
+            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(photosJson)))
             {
-                var item = new SkydrivePhoto();
-                item.Title = (string)photo["name"];
-                item.Subtitle = (string)photo["name"];
-
-                item.PhotoUrl = (string)photo["source"];
-                item.Description = (string)photo["description"];
-                item.ID = (string)photo["id"];
-
-                if (album != null)
+                //parse into jsonser
+                // note that to using System.Runtime.Serialization.Json
+                // need to add reference System.Servicemodel.Web
+                var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof (SkyDrivePhotoList));
+                try
                 {
-                    album.Photos.Add(item);
+                    var list = (SkyDrivePhotoList) ser.ReadObject(ms);
+                    //Albums = list.SkyDriveAlbums;
+
+                    foreach (var photo in list.SkyDrivePhotos)
+                    {
+                        album.Photos.Add(photo);
+                        GetPhotoThumbnailPicture(photo);
+                    }
                 }
-                // Stop after downloaing 10 imates
-                if (i++ > 10)
-                    break;
+                catch (Exception je)
+                {
+                    System.Diagnostics.Debug.WriteLine("--- " + je.Message);
+                }
             }
 
             AlbumDataLoaded = true;
         }
 
-        private SkydrivePhoto _selectedPhoto;
+        private void GetPhotoThumbnailPicture(SkyDrivePhoto photoItem)
+        {
+            if (photoItem != null)
+            {
+                if(String.IsNullOrEmpty(photoItem.ID) == false)
+                {
+                    LiveConnectClient photoThumbnailClient = new LiveConnectClient(App.LiveSession);
+                    photoThumbnailClient.GetCompleted += photoThumbnailClient_GetCompleted;
+                    photoThumbnailClient.GetAsync(photoItem.ID + "/picture?type=small", photoItem);
+                }
+            }
+        }
+
+        private void photoThumbnailClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                SkyDrivePhoto photo = (SkyDrivePhoto)e.UserState;
+                photo.PhotoThumbnailUrl = (string)e.Result["location"];
+            }
+        }
+
+        private SkyDrivePhoto _selectedPhoto;
         /// <summary>
         /// Sample ViewModel property; this property is used in the view to display its value using a Binding
         /// </summary>
         /// <returns></returns>
-        public SkydrivePhoto SelectedPhoto
+        public SkyDrivePhoto SelectedPhoto
         {
             get
             {
@@ -343,6 +376,14 @@ namespace aSkyImage.ViewModel
                 mediaLibrary.SavePicture(SelectedPhoto.Title, e.Result);
                 MessageBox.Show(String.Format("Photo {0} downloaded to your phone.", SelectedPhoto.Title));
             }
+        }
+
+        public event EventHandler<EventArgs> DataLoaded;
+
+        protected virtual void OnDataLoaded()
+        {
+            EventHandler<EventArgs> handler = DataLoaded;
+            if (handler != null) handler(this, EventArgs.Empty);
         }
     }
 }

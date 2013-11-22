@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.Phone.Controls;
+using aSkyImage.ViewModel;
 
 namespace aSkyImage.View
 {
@@ -28,8 +29,7 @@ namespace aSkyImage.View
             //before loading we have to make sure we have LiveSession
             if (App.LiveSession == null)
             {
-                //need to go to the mainpage for login event..
-                NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                App.ViewModel.SelectedPhoto = (SkyDrivePhoto) State[App.SelectedPhotoKey];
             }
         }
 
@@ -40,7 +40,7 @@ namespace aSkyImage.View
             if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
             {
                 // Save the Session variable in the page's State dictionary.
-
+                State[App.SelectedPhotoKey] = App.ViewModel.SelectedPhoto;
             }
         }
     }

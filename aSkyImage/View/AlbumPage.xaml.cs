@@ -35,10 +35,10 @@ namespace aSkyImage.View
                 //If was tombstoned check state
                 if (State.ContainsKey(App.SelectedAlbumKey))
                 {
-                    App.ViewModel.SelectedAlbum = (SkydriveAlbum) State[App.SelectedAlbumKey];
+                    App.ViewModel.SelectedAlbum = (SkyDriveAlbum) State[App.SelectedAlbumKey];
                     if (State.ContainsKey(App.SelectedAlbumPhotosKey))
                     {
-                        App.ViewModel.SelectedAlbum.Photos = (ObservableCollection<SkydrivePhoto>)State[App.SelectedAlbumPhotosKey];
+                        App.ViewModel.SelectedAlbum.Photos = (ObservableCollection<SkyDrivePhoto>)State[App.SelectedAlbumPhotosKey];
                     }
                     App.ViewModel.AlbumDataLoaded = true;
                 }

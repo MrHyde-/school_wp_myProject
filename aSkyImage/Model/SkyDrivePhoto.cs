@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace aSkyImage.ViewModel
 {
-    public class SkydrivePhoto : INotifyPropertyChanged
+    [DataContract]
+    public class SkyDrivePhoto : INotifyPropertyChanged
     {
-
-
         private string _id = string.Empty;
+        [DataMember(Name = "id")]
         public string ID
         {
             get
@@ -26,6 +27,7 @@ namespace aSkyImage.ViewModel
         }
 
         private string _description = string.Empty;
+        [DataMember(Name = "description")]
         public string Description
         {
             get
@@ -44,6 +46,7 @@ namespace aSkyImage.ViewModel
         }
 
         private string _photoUrl;
+        [DataMember(Name = "source")]
         public string PhotoUrl
         {
             get
@@ -60,6 +63,22 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        private string _photoThumbnailUrl;
+        public string PhotoThumbnailUrl
+        {
+            get
+            {
+                return _photoThumbnailUrl;
+            }
+            set
+            {
+                if (value != _photoThumbnailUrl)
+                {
+                    _photoThumbnailUrl = value;
+                    NotifyPropertyChanged("PhotoThumbnailUrl");
+                }
+            }
+        }
 
         private string _subtitle;
         public string Subtitle
@@ -80,6 +99,7 @@ namespace aSkyImage.ViewModel
 
 
         private string _title;
+        [DataMember(Name = "name")]
         public string Title
         {
             get

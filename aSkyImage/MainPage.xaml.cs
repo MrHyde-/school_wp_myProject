@@ -18,10 +18,18 @@ namespace aSkyImage
             if (e.Status == LiveConnectSessionStatus.Connected)
             {
                 App.LiveSession = e.Session;
+                
+                //now we should inform user that we are downloading he's albums..
+                textBlockStatus.Text = "Loading your albums..";
+                App.ViewModel.LoadData();
 
-                //check if tombstone
-                NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
+                App.ViewModel.DataLoaded += viewModeldata_loaded;    
             }
+        }
+
+        private void viewModeldata_loaded(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
         }
     }
 }

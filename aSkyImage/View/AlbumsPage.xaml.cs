@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Microsoft.Phone.Controls;
 using aSkyImage.UserControls;
+using aSkyImage.ViewModel;
 
 namespace aSkyImage.View
 {
@@ -17,18 +19,34 @@ namespace aSkyImage.View
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-
             //before loading we have to make sure we have LiveSession
             if (App.LiveSession == null)
             {
-                //need to go to the mainpage for login event..
-                NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
-                return;
+                App.ViewModel.Albums = (ObservableCollection<SkyDriveAlbum>) State[App.AlbumsKey];
             }
-
-            App.ViewModel.LoadData();
+            else
+            {
+                App.ViewModel.LoadData();    
+            }
+            
             DataContext = App.ViewModel;
+        }
+
+        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            // If this is a back navigation, the page will be discarded, so there
+            // is no need to save state.
+            if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
+            {
+                // Save the Session variable in the page's State dictionary.
+                if (App.ViewModel != null)
+                {
+                    if (App.ViewModel.SelectedAlbum != null)
+                    {
+                        State[App.AlbumsKey] = App.ViewModel.Albums;
+                    }
+                }
+            }
         }
 
         private void AlbumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

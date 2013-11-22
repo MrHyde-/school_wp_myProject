@@ -32,7 +32,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
                         <!--Replace rectangle with image-->
-                        <Image Source="{Binding PhotoUrl}" Height="100" Width="100"  Margin="12,0,9,0"/>
+                        <Image Source="{Binding PhotoThumbnailUrl}" Height="100" Width="100"  Margin="12,0,9,0"/>
                         <StackPanel Width="311">
                             <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Margin="12,12,0,0" FontSize="{StaticResource PhoneFontSizeMedium}" />
                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" FontSize="{StaticResource PhoneFontSizeSmall}"/>

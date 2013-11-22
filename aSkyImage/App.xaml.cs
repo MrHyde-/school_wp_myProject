@@ -11,6 +11,8 @@ namespace aSkyImage
     {
         public static string SelectedAlbumKey = "aSkyImageSelectedAlbum";
         public static string SelectedAlbumPhotosKey = "aSkyImageSelectedAlbumPhotos";
+        public static string AlbumsKey = "aSkyImageAlbums";
+        public static string SelectedPhotoKey = "aSkyImageSelectedPhoto";
 
         private static LiveConnectSession _liveSession;
         public static LiveConnectSession LiveSession

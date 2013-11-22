@@ -1,24 +1,40 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace aSkyImage.ViewModel
 {
-    public class SkydriveAlbum : INotifyPropertyChanged
+    [DataContract]
+    public class SkyDriveAlbum : INotifyPropertyChanged
     {
-        public SkydriveAlbum()
+        public SkyDriveAlbum()
         {
-            this.Photos = new ObservableCollection<SkydrivePhoto>();
+            this.Photos = new ObservableCollection<SkyDrivePhoto>();
         }
 
-
-
+        private ObservableCollection<SkyDrivePhoto> _photos; 
         /// <summary>
         /// A collection for ItemViewModel objects.
         /// </summary>
-        public ObservableCollection<SkydrivePhoto> Photos { get; set; }
+        public ObservableCollection<SkyDrivePhoto> Photos 
+        { 
+            get 
+            {
+                if (_photos == null)
+                {
+                    _photos = new ObservableCollection<SkyDrivePhoto>();
+                }
+                return _photos;
+            } 
+            set
+            {
+                _photos = value;
+            } 
+        }
 
         private string _id = string.Empty;
+        [DataMember(Name = "id")]
         public string ID
         {
             get
@@ -37,6 +53,7 @@ namespace aSkyImage.ViewModel
         }
 
         private string _title = string.Empty;
+        [DataMember(Name = "name")]
         public string Title
         {
             get
@@ -73,6 +90,7 @@ namespace aSkyImage.ViewModel
         }
 
         private string _description = string.Empty;
+        [DataMember(Name = "description")]
         public string Description
         {
             get
