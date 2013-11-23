@@ -71,7 +71,7 @@ namespace aSkyImage.ViewModel
             }
         }
 
-        private string _albumPicture = string.Empty;
+        private string _albumPicture = String.Empty;
         public string AlbumPicture
         {
             get

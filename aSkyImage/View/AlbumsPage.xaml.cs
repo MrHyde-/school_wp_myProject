@@ -66,7 +66,7 @@ namespace aSkyImage.View
                 _popup = null;
             }
 
-            _popup = new Popup() { IsOpen = true, Child = new InputPrompt("Please give your album a name") };           
+            _popup = new Popup() { IsOpen = true, Child = new InputPrompt("Please give your album a name", PopupAction.CreateAlbum) };
         }
     }
 }

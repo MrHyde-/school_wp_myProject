@@ -385,5 +385,62 @@ namespace aSkyImage.ViewModel
             EventHandler<EventArgs> handler = DataLoaded;
             if (handler != null) handler(this, EventArgs.Empty);
         }
+
+        public void AddCommentToPhoto(string comment)
+        {
+            var commentData = new Dictionary<string, object>();
+            commentData.Add("message", comment);
+
+            LiveConnectClient addCommentClient = new LiveConnectClient(App.LiveSession);
+            addCommentClient.PostCompleted += addCommentClient_OnPostComleted;
+            addCommentClient.PostAsync(App.ViewModel.SelectedPhoto.ID + "/comments", commentData);
+        }
+
+        private void addCommentClient_OnPostComleted(object sender, LiveOperationCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                MessageBox.Show("Comment added");
+            }
+        }
+
+        public void LoadPhotoComments(SkyDrivePhoto selectedPhoto)
+        {
+            LiveConnectClient readPhotoComments = new LiveConnectClient(App.LiveSession);
+            readPhotoComments.GetCompleted += readPhotoComments_OnCompleted;
+            readPhotoComments.GetAsync(selectedPhoto.ID + "/comments");
+        }
+
+        private void readPhotoComments_OnCompleted(object sender, LiveOperationCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                var photosJson = e.RawResult;
+                SelectedPhoto.Comments = new List<SkyDriveComment>();
+
+                //load into memory stream
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(photosJson)))
+                {
+                    //parse into jsonser
+                    // note that to using System.Runtime.Serialization.Json
+                    // need to add reference System.Servicemodel.Web
+                    var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(SkyDriveCommentList));
+                    try
+                    {
+                        var list = (SkyDriveCommentList)ser.ReadObject(ms);
+                        //Albums = list.SkyDriveAlbums;
+
+                        foreach (var comment in list.Comments)
+                        {
+                            SelectedPhoto.Comments.Add(comment);
+                        }
+                    }
+                    catch (Exception je)
+                    {
+                        System.Diagnostics.Debug.WriteLine("--- " + je.Message);
+                    }
+                }
+            }
+        }
     }
 }

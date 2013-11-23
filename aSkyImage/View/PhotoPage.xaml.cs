@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using aSkyImage.UserControls;
 using aSkyImage.ViewModel;
 
 namespace aSkyImage.View
 {
     public partial class PhotoPage : PhoneApplicationPage
     {
+        private Popup _popup = null;
+
         public PhotoPage()
         {
             InitializeComponent();
@@ -19,6 +24,17 @@ namespace aSkyImage.View
             if (App.ViewModel.SelectedPhoto != null)
             {
                 ImageUsersImage.Source = new BitmapImage(new Uri(App.ViewModel.SelectedPhoto.PhotoUrl, UriKind.RelativeOrAbsolute));
+                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).IsEnabled = App.ViewModel.SelectedPhoto.CommentingEnabled;
+
+                foreach (var comment in App.ViewModel.SelectedPhoto.Comments)
+                {
+                    var textBlockComment = new System.Windows.Controls.TextBlock();
+
+                    textBlockComment.Style = (Style) Resources["PhoneTextSmallStyle"];
+                    textBlockComment.Text = comment.CommentedBy.UserName + ": " + comment.Message;
+
+                    PhotoComments.Children.Add(textBlockComment);
+                }
             }
         }
 
@@ -42,6 +58,17 @@ namespace aSkyImage.View
                 // Save the Session variable in the page's State dictionary.
                 State[App.SelectedPhotoKey] = App.ViewModel.SelectedPhoto;
             }
+        }
+
+        private void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
+        {
+            if (_popup != null)
+            {
+                _popup.IsOpen = false;
+                _popup = null;
+            }
+
+            _popup = new Popup() { IsOpen = true, Child = new InputPrompt("Write your comment", PopupAction.AddCommentToPhoto) };
         }
     }
 }

@@ -8,15 +8,17 @@ namespace aSkyImage.UserControls
     public partial class InputPrompt : UserControl
     {
         private String _caption;
+        private PopupAction _action;
         public InputPrompt()
         {
             InitializeComponent();
         }
 
-        public InputPrompt(string title)
+        public InputPrompt(string title, PopupAction action)
         {
             Loaded += OnLoaded;
             _caption = title;
+            _action = action;
             InitializeComponent();
         }
 
@@ -53,9 +55,25 @@ namespace aSkyImage.UserControls
                 //say no no you bloody API8
                 return;
             }
+
+            switch (_action)
+            {
+                case PopupAction.CreateAlbum:
+                    App.ViewModel.CreateAlbum(TextBoxUserInput.Text);
+                    break;
+                case PopupAction.AddCommentToPhoto:
+                    App.ViewModel.AddCommentToPhoto(TextBoxUserInput.Text);
+                    break;
+            }
             
-            App.ViewModel.CreateAlbum(TextBoxUserInput.Text);
             ClosePopup();
         }
+    }
+
+    public enum PopupAction
+    {
+        Undefined = 0,
+        CreateAlbum = 1,
+        AddCommentToPhoto = 2,
     }
 }

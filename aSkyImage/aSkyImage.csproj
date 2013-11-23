@@ -73,7 +73,10 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\SkyDriveAccess.cs" />
     <Compile Include="Model\SkyDriveAlbumList.cs" />
+    <Compile Include="Model\SkyDriveComment.cs" />
+    <Compile Include="Model\SkyDriveCommentList.cs" />
     <Compile Include="Model\SkyDrivePhotoList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -135,6 +138,7 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Appbar\add.png" />
     <Content Include="Images\Appbar\pin.png" />
     <Content Include="Images\Appbar\download.png" />
     <Content Include="Images\Appbar\folder.png" />

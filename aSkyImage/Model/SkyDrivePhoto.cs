@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using aSkyImage.Model;
 
 namespace aSkyImage.ViewModel
 {
@@ -63,7 +66,7 @@ namespace aSkyImage.ViewModel
             }
         }
 
-        private string _photoThumbnailUrl;
+        private string _photoThumbnailUrl = String.Empty;
         public string PhotoThumbnailUrl
         {
             get
@@ -116,6 +119,28 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        private bool _commentsEnabled;
+        [DataMember(Name = "comments_enabled")]
+        public bool CommentingEnabled
+        {
+            get
+            { 
+                return _commentsEnabled;
+            }
+            set
+            {
+                if (value != _commentsEnabled)
+                {
+                    _commentsEnabled = value;
+                    NotifyPropertyChanged("CommentingEnabled");
+                }
+            }
+        }
+
+        [DataMember(Name = "shared_with")]
+        public SkyDriveAccess PhotoAccess { get; set; }
+
+        public List<SkyDriveComment> Comments { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

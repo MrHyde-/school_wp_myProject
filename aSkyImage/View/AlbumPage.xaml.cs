@@ -77,6 +77,8 @@ namespace aSkyImage.View
         {
             if (App.ViewModel.SelectedPhoto != null)
             {
+                App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+
                 var selectedDataObject = e.AddedItems[0]; // assuming single selection
                 ChangeItemForegroundColor(selectedDataObject, Colors.Red);
 

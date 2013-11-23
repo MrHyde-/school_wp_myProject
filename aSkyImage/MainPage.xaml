@@ -28,7 +28,7 @@
         
         <TextBlock Height="50" HorizontalAlignment="Center" Margin="2,80,0,2" Name="textBlockStatus" Text="" Style="{StaticResource PhoneTextLargeStyle}" VerticalAlignment="Top" Grid.Row="1" />
 
-        <my:SignInButton Branding="Skydrive" Grid.Row="2" Height="72" HorizontalAlignment="Left" Margin="130,130,0,0" Name="signInSkyDriveButton" VerticalAlignment="Top" Width="220" Scopes="wl.photos wl.skydrive_update wl.offline_access" SessionChanged="SignInSkyDriveButton_OnSessionChanged" />
+        <my:SignInButton Branding="Skydrive" Grid.Row="2" Height="72" HorizontalAlignment="Left" Margin="130,130,0,0" Name="signInSkyDriveButton" VerticalAlignment="Top" Width="220" Scopes="wl.photos wl.skydrive_update wl.offline_access" SessionChanged="SignInSkyDriveButton_OnSessionChanged"/>
         
         <!--ContentPanel - place additional content here-->
         
