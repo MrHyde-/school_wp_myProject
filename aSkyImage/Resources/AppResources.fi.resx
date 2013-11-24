@@ -141,6 +141,9 @@
   <data name="CommonRefresh" xml:space="preserve">
     <value>Päivitä</value>
   </data>
+  <data name="LoginPromptTitle" xml:space="preserve">
+    <value>Sessio vanhentunut, kirjaudu uudestaan</value>
+  </data>
   <data name="LoginTitle" xml:space="preserve">
     <value>Kirjaudu sisään</value>
   </data>
