@@ -3,15 +3,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using aSkyImage.Model;
+using aSkyImage.Resources;
+using aSkyImage.UserControls;
 using aSkyImage.ViewModel;
 
 namespace aSkyImage.View
 {
     public partial class AlbumPage : PhoneApplicationPage
     {
+        private Popup _popup = null;
+
         public AlbumPage()
         {
             InitializeComponent();
@@ -20,8 +26,18 @@ namespace aSkyImage.View
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            LocalizeApplicationBar();
             PageTitle.Text = App.ViewModel.SelectedAlbum.Title;
             App.ViewModel.LoadAlbumData();
+
+            if (App.ViewModel.SelectedPhoto == null)
+            {
+                if (ApplicationBar.Buttons.Count > 2)
+                {
+                    (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = false;
+                }
+            }
+
             DataContext = App.ViewModel;
         }
 
@@ -42,11 +58,19 @@ namespace aSkyImage.View
                     }
                     App.ViewModel.AlbumDataLoaded = true;
                 }
-                else
-                {
-                    //need to go to the mainpage for login event..
-                    NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));    
-                }
+
+                ChangeApplicationBarIconStatus(false);
+            }
+        }
+
+        private void ChangeApplicationBarIconStatus(bool isEnabled)
+        {
+            if (ApplicationBar.Buttons.Count > 2)
+            {
+                //disable appbar buttons if no session
+                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).IsEnabled = isEnabled;
+                (ApplicationBar.Buttons[1] as ApplicationBarIconButton).IsEnabled = isEnabled;
+                (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = isEnabled;
             }
         }
 
@@ -66,6 +90,12 @@ namespace aSkyImage.View
                     }
                 }
             }
+            else
+            {
+                //without this we are not able to navigate straight back to same album..
+                App.ViewModel.SelectedAlbum.Photos.Clear(); 
+                App.ViewModel.SelectedAlbum = null;
+            }
         }
 
         private void AppIconUpload_OnClick(object sender, EventArgs e)
@@ -75,18 +105,26 @@ namespace aSkyImage.View
 
         private void PhotoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (App.ViewModel.SelectedPhoto != null)
+            if (ViewLoginPromptIfSessionEnded() == false)
             {
-                App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
-
-                var selectedDataObject = e.AddedItems[0]; // assuming single selection
-                ChangeItemForegroundColor(selectedDataObject, Colors.Red);
-
-                if (e.RemovedItems.Count > 0)
+                if (App.ViewModel.SelectedPhoto != null)
                 {
-                    var removedObject = e.RemovedItems[0]; // assuming single selection
-                    ChangeItemForegroundColor(removedObject, (Color)Resources["PhoneForegroundColor"]);    
-                }
+                    if (ApplicationBar.Buttons.Count > 2)
+                    {
+                        (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = true;
+                    }
+
+                    App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+
+                    var selectedDataObject = e.AddedItems[0]; // assuming single selection
+                    ChangeItemForegroundColor(selectedDataObject, Colors.Red);
+
+                    if (e.RemovedItems.Count > 0)
+                    {
+                        var removedObject = e.RemovedItems[0]; // assuming single selection
+                        ChangeItemForegroundColor(removedObject, (Color)Resources["PhoneForegroundColor"]);
+                    }
+                }   
             }
         }
 
@@ -106,14 +144,37 @@ namespace aSkyImage.View
 
         private void AppIconShowImage_OnClick(object sender, EventArgs e)
         {
-            if (App.ViewModel.SelectedPhoto != null)
+            if (ViewLoginPromptIfSessionEnded() == false)
             {
-                //move to photo page
-                NavigationService.Navigate(new Uri("/View/PhotoPage.xaml", UriKind.Relative));
-                return;
+                if (App.ViewModel.SelectedPhoto != null)
+                {
+                    //move to photo page
+                    NavigationService.Navigate(new Uri("/View/PhotoPage.xaml", UriKind.Relative));
+                    return;
+                }
+
+                MessageBox.Show("Please select a photo.");
             }
-            
-            MessageBox.Show("Please select a photo.");
+        }
+
+        private bool ViewLoginPromptIfSessionEnded()
+        {
+            if (App.LiveSession == null)
+            {
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
+                }
+
+                var childPopup = new LoginPrompt(PopupLogin.AlbumPage);
+                childPopup.LoginCompleted += loginCompleted;
+
+                _popup = new Popup() { IsOpen = true, Child = childPopup };
+
+                return true;
+            }
+            return false;
         }
 
         private void AppIconPin_OnClick(object sender, EventArgs e)
@@ -146,6 +207,50 @@ namespace aSkyImage.View
             else
             {
                 MessageBox.Show("A tile exists already.");
+            }
+        }
+
+        private void AppBarRefreshAlbum_OnClick(object sender, EventArgs e)
+        {
+            if (App.LiveSession == null)
+            {
+                //open popup please login
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
+                }
+
+                var childPopup = new LoginPrompt(PopupLogin.AlbumPage);
+                childPopup.LoginCompleted += loginCompleted;
+
+                _popup = new Popup() { IsOpen = true, Child = childPopup };
+                
+            }
+            else
+            {
+                App.ViewModel.AlbumDataLoaded = false;
+                App.ViewModel.LoadAlbumData();    
+            }
+        }
+
+        private void loginCompleted(object sender, EventArgs e)
+        {
+            //activate application bar icons
+            ChangeApplicationBarIconStatus(true);
+        }
+
+        private void LocalizeApplicationBar()
+        {
+            if (ApplicationBar.Buttons.Count > 2)
+            {
+                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).Text = AppResources.AlbumPageAppBarUpload;
+                (ApplicationBar.Buttons[1] as ApplicationBarIconButton).Text = AppResources.AlbumPageAppBarDownload;
+                (ApplicationBar.Buttons[2] as ApplicationBarIconButton).Text = AppResources.AlbumPageAppBarZoom;
+            }
+            if (ApplicationBar.MenuItems.Count > 0)
+            {
+                (ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).Text = AppResources.CommonRefresh;
             }
         }
     }

@@ -1,7 +1,8 @@
 ﻿using System;
-using Microsoft.Live;
-using Microsoft.Live.Controls;
+using System.Windows;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using aSkyImage.Resources;
 
 namespace aSkyImage
 {
@@ -11,23 +12,25 @@ namespace aSkyImage
         public MainPage()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
         }
 
-        private void SignInSkyDriveButton_OnSessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            if (e.Status == LiveConnectSessionStatus.Connected)
+            if (ApplicationBar.Buttons.Count > 0)
             {
-                App.LiveSession = e.Session;
-                
-                //now we should inform user that we are downloading he's albums..
-                textBlockStatus.Text = "Loading your albums..";
-                App.ViewModel.LoadData();
-
-                App.ViewModel.DataLoaded += viewModeldata_loaded;    
+                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).Text = AppResources.MainPageAppBarAlbums;
             }
         }
 
         private void viewModeldata_loaded(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
+            ApplicationBar.IsVisible = true;
+            textBlockStatus.Text = AppResources.MainPageStatusLoadedAlbums;
+        }
+
+        private void AppIconViewFolders_OnClick(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
         }

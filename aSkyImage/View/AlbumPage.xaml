@@ -9,7 +9,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
 
@@ -49,7 +49,10 @@
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/upload.png" Text="Upload" x:Name="AppIconUpload" Click="AppIconUpload_OnClick"/>
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/download.png" Text="Download" x:Name="AppIconDownload" Click="AppIconDownload_OnClick"/>
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/zoom.png" Text="ZoomImage" x:Name="AppIconShowImage" Click="AppIconShowImage_OnClick"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/Appbar/pin.png" Text="PinAlbum" x:Name="AppIconPin" Click="AppIconPin_OnClick"/>
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="Refresh" x:Name="AppBarRefreshAlbum" Click="AppBarRefreshAlbum_OnClick"/>
+            </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

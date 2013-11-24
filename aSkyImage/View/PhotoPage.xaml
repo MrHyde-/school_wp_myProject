@@ -24,14 +24,25 @@
             <!--TitlePanel contains the name of the application and page title-->
             <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
                 <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=AppResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
+                <TextBlock x:Name="PhotoTitle" Text="{Binding Title}" Style="{StaticResource PhoneTextLargeStyle}"/>
             </StackPanel>
 
             <!--ContentPanel - place additional content here-->
             <StackPanel x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
-                <Image x:Name="ImageUsersImage"/>
+                <Image x:Name="ImageUsersImage" Source="{Binding PhotoUrl}"/>
 
-                <StackPanel x:Name="PhotoComments">
+                <StackPanel x:Name="PhotoComments" Margin="0,0,0,0">
                     <TextBlock x:Name="TextBlockCommentsTitle" Text="Comments" Style="{StaticResource PhoneTextNormalStyle}" />
+                    <ListBox x:Name="ListBoxComments" ItemsSource="{Binding Comments}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel x:Name="StackPanelCommentItem" Orientation="Horizontal" Margin="0,0,0,0">
+                                    <TextBlock x:Name="TextBlockCommentedBy" Style="{StaticResource PhoneTextSmallStyle}" Text="{Binding CommentedBy.UserName}" TextWrapping="Wrap" MaxWidth="400" />
+                                    <TextBlock x:Name="TextBlockComment" Style="{StaticResource PhoneTextSmallStyle}" Text="{Binding Message}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -40,6 +51,9 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="AppBarAddComment" IconUri="/Images/Appbar/add.png" Text="AddComment" Click="ApplicationBarIconButton_OnClick"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="Refresh" x:Name="AppBarRefreshPhoto" Click="AppBarRefreshPhoto_OnClick"/>
+            </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

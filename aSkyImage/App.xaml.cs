@@ -13,6 +13,7 @@ namespace aSkyImage
         public static string SelectedAlbumPhotosKey = "aSkyImageSelectedAlbumPhotos";
         public static string AlbumsKey = "aSkyImageAlbums";
         public static string SelectedPhotoKey = "aSkyImageSelectedPhoto";
+        public static string SelectedPhotoCommentsKey = "aSkyImageSelectedPhotoComments";
 
         private static LiveConnectSession _liveSession;
         public static LiveConnectSession LiveSession

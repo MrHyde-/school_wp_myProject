@@ -3,29 +3,47 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using Microsoft.Live;
+using Microsoft.Live.Controls;
 using Microsoft.Phone.Controls;
+using aSkyImage.Model;
 
 namespace aSkyImage.UserControls
 {
-    public partial class InputPrompt : UserControl
+    public partial class LoginPrompt : UserControl
     {
-        private String _caption;
-        private PopupAction _action;
-        public InputPrompt()
+        private bool _titleShown = true;
+        public bool TitleShown { get { return _titleShown; } set { _titleShown = value; } }
+
+        private PopupLogin _promtPage;
+        public event EventHandler<EventArgs> LoginCompleted;
+
+        protected virtual void OnLoginCompleted()
         {
+            EventHandler<EventArgs> handler = LoginCompleted;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public LoginPrompt()
+        {
+            _promtPage = PopupLogin.Undefined;
+            Loaded += OnLoaded;
             InitializeComponent();
         }
 
-        public InputPrompt(string title, PopupAction action)
+        public LoginPrompt(PopupLogin promptPage)
         {
+            _promtPage = promptPage;
             Loaded += OnLoaded;
-            _caption = title;
-            _action = action;
             InitializeComponent();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            if (TitleShown == false)
+            {
+                PromptTitle.Visibility = Visibility.Collapsed;
+            }
             Popup thisPopup = this.Parent as Popup;
 
             ((PhoneApplicationFrame)Application.Current.RootVisual).OrientationChanged += OnOrientationChanged;
@@ -35,16 +53,12 @@ namespace aSkyImage.UserControls
                 var orientation = ((PhoneApplicationFrame) Application.Current.RootVisual).Orientation;
                 SetPopupLocationAndProjectionByOrientation(orientation, thisPopup);
             }
-
-            PromptTitle.Text = _caption;
         }
 
         private void SetPopupLocationAndProjectionByOrientation(PageOrientation orientation, Popup thisPopup)
         {
             if (orientation == PageOrientation.LandscapeLeft || orientation == PageOrientation.LandscapeRight)
             {
-                TextBoxUserInput.Width = 660d;
-
                 if (orientation == PageOrientation.LandscapeRight)
                 {
                     SetPopupOffsetsToLandscape(thisPopup, 90d, 300d, -240d);
@@ -78,11 +92,6 @@ namespace aSkyImage.UserControls
             thisPopup.HorizontalOffset = horisontalOffset;
         }
 
-        private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
-        {
-            ClosePopup();
-        }
-
         private void ClosePopup()
         {
             Popup thisPopup = this.Parent as Popup;
@@ -93,32 +102,31 @@ namespace aSkyImage.UserControls
             }
         }
 
-        private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
+        private void SignInSkyDriveButton_OnSessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
         {
-            if (String.IsNullOrEmpty(TextBoxUserInput.Text))
+            if (e.Status == LiveConnectSessionStatus.Connected)
             {
-                //say no no you bloody API8
-                return;
-            }
+                App.LiveSession = e.Session;
 
-            switch (_action)
-            {
-                case PopupAction.CreateAlbum:
-                    App.ViewModel.CreateAlbum(TextBoxUserInput.Text);
-                    break;
-                case PopupAction.AddCommentToPhoto:
-                    App.ViewModel.AddCommentToPhoto(TextBoxUserInput.Text);
-                    break;
+                //depending where user is refresh that data..
+                if (_promtPage == PopupLogin.PhotoPage)
+                {
+                    //refresh selectedphoto data
+                    App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+                }
+                else if (_promtPage == PopupLogin.AlbumPage)
+                {
+                    App.ViewModel.AlbumDataLoaded = false;
+                    App.ViewModel.LoadAlbumData();
+                }
+                else
+                {
+                    App.ViewModel.LoadData(true);
+                }
+
+                OnLoginCompleted();
+                ClosePopup();
             }
-            
-            ClosePopup();
         }
-    }
-
-    public enum PopupAction
-    {
-        Undefined = 0,
-        CreateAlbum = 1,
-        AddCommentToPhoto = 2,
     }
 }

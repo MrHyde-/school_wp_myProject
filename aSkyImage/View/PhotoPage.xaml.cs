@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media.Imaging;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using aSkyImage.Model;
+using aSkyImage.Resources;
 using aSkyImage.UserControls;
 using aSkyImage.ViewModel;
 
@@ -23,18 +25,24 @@ namespace aSkyImage.View
         {
             if (App.ViewModel.SelectedPhoto != null)
             {
-                ImageUsersImage.Source = new BitmapImage(new Uri(App.ViewModel.SelectedPhoto.PhotoUrl, UriKind.RelativeOrAbsolute));
-                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).IsEnabled = App.ViewModel.SelectedPhoto.CommentingEnabled;
-
-                foreach (var comment in App.ViewModel.SelectedPhoto.Comments)
+                if (App.ViewModel.SelectedPhoto.Title.Length > 30)
                 {
-                    var textBlockComment = new System.Windows.Controls.TextBlock();
-
-                    textBlockComment.Style = (Style) Resources["PhoneTextSmallStyle"];
-                    textBlockComment.Text = comment.CommentedBy.UserName + ": " + comment.Message;
-
-                    PhotoComments.Children.Add(textBlockComment);
+                    PhotoTitle.Style = (Style) Resources["PhoneTextTitle3Style"];
                 }
+                
+                if (ApplicationBar.Buttons.Count > 0)
+                {
+                    var addCommentButton = (ApplicationBar.Buttons[0] as ApplicationBarIconButton);
+                    addCommentButton.IsEnabled = App.ViewModel.SelectedPhoto.CommentingEnabled;
+                    addCommentButton.Text = AppResources.PhotoPageAppBarAddNewComment;
+                }
+
+                if (ApplicationBar.MenuItems.Count > 0)
+                {
+                    (ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).Text = AppResources.CommonRefresh;
+                }
+
+                DataContext = App.ViewModel.SelectedPhoto;
             }
         }
 
@@ -46,6 +54,7 @@ namespace aSkyImage.View
             if (App.LiveSession == null)
             {
                 App.ViewModel.SelectedPhoto = (SkyDrivePhoto) State[App.SelectedPhotoKey];
+                App.ViewModel.SelectedPhoto.Comments = (ObservableCollection<SkyDriveComment>) State[App.SelectedPhotoCommentsKey];
             }
         }
 
@@ -57,6 +66,16 @@ namespace aSkyImage.View
             {
                 // Save the Session variable in the page's State dictionary.
                 State[App.SelectedPhotoKey] = App.ViewModel.SelectedPhoto;
+                State[App.SelectedPhotoCommentsKey] = App.ViewModel.SelectedPhoto.Comments;
+            }
+            else
+            {
+                //on navigate back close popup if it is still open
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
+                }
             }
         }
 
@@ -68,7 +87,15 @@ namespace aSkyImage.View
                 _popup = null;
             }
 
-            _popup = new Popup() { IsOpen = true, Child = new InputPrompt("Write your comment", PopupAction.AddCommentToPhoto) };
+            _popup = new Popup() { IsOpen = true, Child = new InputPrompt(AppResources.PhotoPageAddCommentTitle, PopupAction.AddCommentToPhoto) };
+        }
+
+        private void AppBarRefreshPhoto_OnClick(object sender, EventArgs e)
+        {
+            if (App.ViewModel.SelectedPhoto != null)
+            {
+                App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+            }
         }
     }
 }

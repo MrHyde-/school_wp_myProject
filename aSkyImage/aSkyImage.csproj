@@ -73,16 +73,27 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\PopupLogin.cs" />
     <Compile Include="Model\SkyDriveAccess.cs" />
     <Compile Include="Model\SkyDriveAlbumList.cs" />
     <Compile Include="Model\SkyDriveComment.cs" />
     <Compile Include="Model\SkyDriveCommentList.cs" />
+    <Compile Include="Model\SkyDrivePhotoImage.cs" />
+    <Compile Include="Model\SkyDrivePhotoImagesList.cs" />
     <Compile Include="Model\SkyDrivePhotoList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\AppResources.fi.Designer.cs">
+      <DependentUpon>AppResources.fi.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="UserControls\LoginPrompt.xaml.cs">
+      <DependentUpon>LoginPrompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\InputPrompt.xaml.cs">
       <DependentUpon>InputPrompt.xaml</DependentUpon>
@@ -108,6 +119,10 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\LoginPrompt.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\InputPrompt.xaml">
       <SubType>Designer</SubType>
@@ -151,6 +166,10 @@
     <EmbeddedResource Include="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppResources.fi.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.fi.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

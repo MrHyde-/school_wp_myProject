@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using aSkyImage.Model;
+using aSkyImage.Resources;
 using aSkyImage.UserControls;
 using aSkyImage.ViewModel;
 
@@ -15,6 +19,19 @@ namespace aSkyImage.View
         public AlbumsPage()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            if (ApplicationBar.Buttons.Count > 0)
+            {
+                (ApplicationBar.Buttons[0] as ApplicationBarIconButton).Text = AppResources.AlbumsPageAppBarAddAlbum;
+            }
+            if (ApplicationBar.MenuItems.Count > 0)
+            {
+                (ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).Text = AppResources.CommonRefresh;
+            }
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -26,6 +43,8 @@ namespace aSkyImage.View
             }
             else
             {
+                AlbumListBox.SelectedItem = null;
+                App.ViewModel.SelectedAlbum = null;
                 App.ViewModel.LoadData();    
             }
             
@@ -41,32 +60,75 @@ namespace aSkyImage.View
                 // Save the Session variable in the page's State dictionary.
                 if (App.ViewModel != null)
                 {
-                    if (App.ViewModel.SelectedAlbum != null)
-                    {
-                        State[App.AlbumsKey] = App.ViewModel.Albums;
-                    }
+                    State[App.AlbumsKey] = App.ViewModel.Albums;
+                }
+            }
+            else
+            {
+                //on navigate back close popup if it is still open
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
                 }
             }
         }
 
         private void AlbumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (App.ViewModel.SelectedAlbum != null)
+            if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
             {
-                App.ViewModel.AlbumDataLoaded = false;
-                NavigationService.Navigate(new Uri("/View/AlbumPage.xaml", UriKind.Relative));
+                if (App.ViewModel.SelectedAlbum != null)
+                {
+                    App.ViewModel.SelectedPhoto = null;
+                    App.ViewModel.AlbumDataLoaded = false;
+                    NavigationService.Navigate(new Uri("/View/AlbumPage.xaml", UriKind.Relative));
+                }
             }
         }
 
         private void AppIconNewFolder_OnClick(object sender, EventArgs e)
         {
-            if (_popup != null)
+            if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
             {
-                _popup.IsOpen = false;
-                _popup = null;
-            }
 
-            _popup = new Popup() { IsOpen = true, Child = new InputPrompt("Please give your album a name", PopupAction.CreateAlbum) };
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
+                }
+
+                _popup = new Popup()
+                    {
+                        IsOpen = true,
+                        Child = new InputPrompt(AppResources.AlbumsPageAddNewAlbumsName, PopupAction.CreateAlbum)
+                    };
+            }
+        }
+
+        private void AppBarRefreshAlbums_OnClick(object sender, EventArgs e)
+        {
+            if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
+            {
+                App.ViewModel.LoadData(true);    
+            }
+        }
+
+        private bool ViewLoginPromptIfSessionEnded(PopupLogin popupLogin)
+        {
+            if (App.LiveSession == null)
+            {
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    _popup = null;
+                }
+
+                _popup = new Popup() {IsOpen = true, Child = new LoginPrompt(popupLogin)};
+
+                return true;
+            }
+            return false;
         }
     }
 }

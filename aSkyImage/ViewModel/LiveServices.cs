@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using Microsoft.Live;
 using Microsoft.Phone.Tasks;
 using Microsoft.Xna.Framework.Media;
 using aSkyImage.Model;
+using aSkyImage.Resources;
 
 namespace aSkyImage.ViewModel
 {
@@ -25,13 +27,18 @@ namespace aSkyImage.ViewModel
         /// <summary>
         /// Creates and adds a few ItemViewModel objects into the Items collection.
         /// </summary>
-        public void LoadData()
+        public void LoadData(bool refreshData = false)
         {
-            GetAlbumData();
+            if (refreshData)
+            {
+                IsDataLoaded = false;
+            }
+
+            GetUserAlbumsData();
             this.IsDataLoaded = true;
         }
 
-        private void GetAlbumData()
+        private void GetUserAlbumsData()
         {
             if (IsDataLoaded == false)
             {
@@ -152,7 +159,7 @@ namespace aSkyImage.ViewModel
             {
                 string newAlbumJson = e.RawResult;
                 InsertNewAlbumToAlbumsCollection(newAlbumJson);
-                MessageBox.Show("Album created", "Done", MessageBoxButton.OK);
+                MessageBox.Show(AppResources.MessageToUserAlbumCreated);
             }
         }
 
@@ -230,7 +237,7 @@ namespace aSkyImage.ViewModel
                     }
                 }
 
-                MessageBox.Show(String.Format("Uploading image to album: {0}", SelectedAlbum.Title));
+                MessageBox.Show(String.Format(AppResources.MessageToUserUploadingImageToAlbum, SelectedAlbum.Title));
 
                 uploadClient.BackgroundUploadAsync(SelectedAlbum.ID, new Uri(uploadLocation, UriKind.RelativeOrAbsolute), OverwriteOption.Rename, userState);
             };
@@ -242,7 +249,7 @@ namespace aSkyImage.ViewModel
         {
             if (e.Error == null)
             {
-                MessageBox.Show("Image uploaded");
+                MessageBox.Show(AppResources.MessageToUserImageUploaded);
                 Deployment.Current.Dispatcher.BeginInvoke(() => DownloadPictures(SelectedAlbum));
             }
         }
@@ -270,7 +277,7 @@ namespace aSkyImage.ViewModel
             }
             else
             {
-                MessageBox.Show("Problem with selected album..");
+                MessageBox.Show(AppResources.MessageToUserProblemsWithAlbum);
             }
         }
 
@@ -285,34 +292,36 @@ namespace aSkyImage.ViewModel
 
             SkyDriveAlbum album = SelectedAlbum;
 
-            album.Photos.Clear();
-            var photosJson = e.RawResult;
-
-            //load into memory stream
-            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(photosJson)))
+            if (album != null)
             {
-                //parse into jsonser
-                // note that to using System.Runtime.Serialization.Json
-                // need to add reference System.Servicemodel.Web
-                var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof (SkyDrivePhotoList));
-                try
-                {
-                    var list = (SkyDrivePhotoList) ser.ReadObject(ms);
-                    //Albums = list.SkyDriveAlbums;
+                album.Photos.Clear();
+                var photosJson = e.RawResult;
 
-                    foreach (var photo in list.SkyDrivePhotos)
+                //load into memory stream
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(photosJson)))
+                {
+                    //parse into jsonser
+                    // note that to using System.Runtime.Serialization.Json
+                    // need to add reference System.Servicemodel.Web
+                    var ser = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof (SkyDrivePhotoList));
+                    try
                     {
-                        album.Photos.Add(photo);
-                        GetPhotoThumbnailPicture(photo);
+                        var list = (SkyDrivePhotoList) ser.ReadObject(ms);
+
+                        foreach (var photo in list.SkyDrivePhotos)
+                        {
+                            album.Photos.Add(photo);
+                            GetPhotoThumbnailPicture(photo);
+                        }
+                    }
+                    catch (Exception je)
+                    {
+                        System.Diagnostics.Debug.WriteLine("--- " + je.Message);
                     }
                 }
-                catch (Exception je)
-                {
-                    System.Diagnostics.Debug.WriteLine("--- " + je.Message);
-                }
-            }
 
-            AlbumDataLoaded = true;
+                AlbumDataLoaded = true;
+            }
         }
 
         private void GetPhotoThumbnailPicture(SkyDrivePhoto photoItem)
@@ -321,6 +330,20 @@ namespace aSkyImage.ViewModel
             {
                 if(String.IsNullOrEmpty(photoItem.ID) == false)
                 {
+                    var tnurl = photoItem.PhotoImages.FirstOrDefault(x => x.Type == "thumbnail");
+                    if (tnurl != null)
+                    {
+                        photoItem.PhotoThumbnailUrl = tnurl.Source;
+                        return;
+                    }
+
+                    tnurl = photoItem.PhotoImages.FirstOrDefault(x => x.Type == "album");
+                    if (tnurl != null)
+                    {
+                        photoItem.PhotoThumbnailUrl = tnurl.Source;
+                        return;
+                    }
+
                     LiveConnectClient photoThumbnailClient = new LiveConnectClient(App.LiveSession);
                     photoThumbnailClient.GetCompleted += photoThumbnailClient_GetCompleted;
                     photoThumbnailClient.GetAsync(photoItem.ID + "/picture?type=small", photoItem);
@@ -359,7 +382,7 @@ namespace aSkyImage.ViewModel
         {
             if (SelectedPhoto == null)
             {
-                MessageBox.Show("Select photo first, please.");
+                MessageBox.Show(AppResources.MessageToUserPleaseSelectPhotoFirst);
                 return;
             }
             
@@ -374,7 +397,7 @@ namespace aSkyImage.ViewModel
             {
                 MediaLibrary mediaLibrary = new MediaLibrary();
                 mediaLibrary.SavePicture(SelectedPhoto.Title, e.Result);
-                MessageBox.Show(String.Format("Photo {0} downloaded to your phone.", SelectedPhoto.Title));
+                MessageBox.Show(String.Format(AppResources.MessageToUserDownloadingCompleted, SelectedPhoto.Title));
             }
         }
 
@@ -400,7 +423,11 @@ namespace aSkyImage.ViewModel
         {
             if (e.Error == null)
             {
-                MessageBox.Show("Comment added");
+                if (SelectedPhoto != null)
+                {
+                    LoadPhotoComments(SelectedPhoto);
+                }
+                MessageBox.Show(AppResources.MessageToUserCommentAdded);
             }
         }
 
@@ -416,7 +443,7 @@ namespace aSkyImage.ViewModel
             if (e.Error == null)
             {
                 var photosJson = e.RawResult;
-                SelectedPhoto.Comments = new List<SkyDriveComment>();
+                SelectedPhoto.Comments = new ObservableCollection<SkyDriveComment>();
 
                 //load into memory stream
                 using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(photosJson)))
@@ -428,17 +455,31 @@ namespace aSkyImage.ViewModel
                     try
                     {
                         var list = (SkyDriveCommentList)ser.ReadObject(ms);
-                        //Albums = list.SkyDriveAlbums;
+                        var photoComments = new ObservableCollection<SkyDriveComment>();
 
                         foreach (var comment in list.Comments)
                         {
-                            SelectedPhoto.Comments.Add(comment);
+                            photoComments.Add(comment);
                         }
+
+                        SelectedPhoto.Comments = photoComments;
                     }
                     catch (Exception je)
                     {
                         System.Diagnostics.Debug.WriteLine("--- " + je.Message);
                     }
+                }
+
+                if (SelectedPhoto.Comments.Any() == false)
+                {
+                    //add a hint to user so noone has not yet commented
+                    SelectedPhoto.Comments.Add(new SkyDriveComment
+                        {
+                            CommentedBy = new SkyDriveCommentUser
+                                {
+                                    UserName = SelectedPhoto.CommentingEnabled ? AppResources.PhotoPageImageHasNoComments : AppResources.PhotoPageImageCommentingDisabled
+                                }
+                        });
                 }
             }
         }

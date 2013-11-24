@@ -118,93 +118,90 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AlbumPageAppBarDownload" xml:space="preserve">
-    <value>Download</value>
+    <value>Lataa</value>
   </data>
   <data name="AlbumPageAppBarUpload" xml:space="preserve">
-    <value>Upload</value>
+    <value>Lähetä</value>
   </data>
   <data name="AlbumPageAppBarZoom" xml:space="preserve">
-    <value>Zoom</value>
+    <value>Tarkastele</value>
   </data>
   <data name="AlbumsPageAddNewAlbumsName" xml:space="preserve">
-    <value>Please give your album a name</value>
+    <value>Anna albumille nimi</value>
   </data>
   <data name="AlbumsPageAppBarAddAlbum" xml:space="preserve">
-    <value>Add Album</value>
+    <value>Lisää albumi</value>
   </data>
   <data name="AlbumsPageTitle" xml:space="preserve">
-    <value>Your albums</value>
+    <value>Albumit</value>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
     <value>aSkyImage</value>
   </data>
   <data name="CommonRefresh" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
-  <data name="LoginPromptTitle" xml:space="preserve">
-    <value>Session ended, please login</value>
+    <value>Päivitä</value>
   </data>
   <data name="LoginTitle" xml:space="preserve">
-    <value>Login</value>
+    <value>Kirjaudu sisään</value>
   </data>
   <data name="MainPageAppBarAlbums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Albumit</value>
   </data>
   <data name="MainPageStatusLoadedAlbums" xml:space="preserve">
-    <value>Loaded, move to albums</value>
+    <value>Ladattu, siirry albumeihin</value>
   </data>
   <data name="MainPageStatusLoadingAlbums" xml:space="preserve">
-    <value>Loading your albums..</value>
+    <value>Ladataan albumeitasi..</value>
   </data>
   <data name="MainPageStatusPleaseLogin" xml:space="preserve">
-    <value>Waiting login</value>
+    <value>Odotetaan kirjautumista</value>
   </data>
   <data name="MainPageStatusTitle" xml:space="preserve">
-    <value>Status</value>
+    <value>Tila</value>
   </data>
   <data name="MainPageWelcomeInfo" xml:space="preserve">
-    <value>Start browsing your SkyDrive albums and photos by login with your Microsoft credentials.</value>
+    <value>Aloita SkyDrive albumien ja valokuvien selaaminen kirjautumalla sisään käyttämällä microsoft tiliäsi.</value>
   </data>
   <data name="MainPageWelcomeText" xml:space="preserve">
-    <value>Welcome to aSkyImage!</value>
+    <value>Tervetuloa aSkyImageen!</value>
   </data>
   <data name="MessageToUserAlbumCreated" xml:space="preserve">
-    <value>New album created</value>
+    <value>Uusi albumi luotu</value>
   </data>
   <data name="MessageToUserCommentAdded" xml:space="preserve">
-    <value>New comment added to a photo</value>
+    <value>Uusi kommentti lisätty</value>
   </data>
   <data name="MessageToUserDownloadingCompleted" xml:space="preserve">
-    <value>Photo {0} downloaded to your phone.</value>
+    <value>Kuva {0} ladattu puhelimeesi.</value>
     <comment>0 photo name</comment>
   </data>
   <data name="MessageToUserImageUploaded" xml:space="preserve">
-    <value>Image uploaded</value>
+    <value>Kuva lähetetty.</value>
   </data>
   <data name="MessageToUserPleaseSelectPhotoFirst" xml:space="preserve">
-    <value>Please select a photo first</value>
+    <value>Valitse kuva ensin, ole hyvä.</value>
   </data>
   <data name="MessageToUserProblemsWithAlbum" xml:space="preserve">
-    <value>Problem with selected album..</value>
+    <value>Ongelmia valitun albumin kanssa..</value>
   </data>
   <data name="MessageToUserUploadingImageToAlbum" xml:space="preserve">
-    <value>Uploading image to album: {0}</value>
+    <value>Lähetetään kuva albumiin: {0}</value>
     <comment>0 =album.name</comment>
   </data>
   <data name="PhotoPageAddCommentTitle" xml:space="preserve">
-    <value>Write your comment</value>
+    <value>Kirjoita kommenttisi</value>
   </data>
   <data name="PhotoPageAppBarAddNewComment" xml:space="preserve">
-    <value>Add Comment</value>
+    <value>Lisää kommentti</value>
   </data>
   <data name="PhotoPageImageCommentingDisabled" xml:space="preserve">
-    <value>Image not shared, go to your skydrive www to share the image.</value>
+    <value>Kuvaa ei ole jaettu, siirry skydriven www sovellukseen muuttaakseeki kuvan jako asetuksia.</value>
   </data>
   <data name="PhotoPageImageHasNoComments" xml:space="preserve">
-    <value>No comments.</value>
+    <value>Ei kommentteja.</value>
   </data>
   <data name="PromptCancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Peruuta</value>
   </data>
   <data name="PromptOk" xml:space="preserve">
     <value>Ok</value>

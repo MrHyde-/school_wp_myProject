@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using aSkyImage.Model;
@@ -140,7 +140,29 @@ namespace aSkyImage.ViewModel
         [DataMember(Name = "shared_with")]
         public SkyDriveAccess PhotoAccess { get; set; }
 
-        public List<SkyDriveComment> Comments { get; set; }
+        [DataMember(Name = "images")]
+        public List<SkyDrivePhotoImage> PhotoImages { get; set; }
+
+        private ObservableCollection<SkyDriveComment> _comments;
+        /// <summary>
+        /// A collection for ItemViewModel objects.
+        /// </summary>
+        public ObservableCollection<SkyDriveComment> Comments
+        {
+            get
+            {
+                if (_comments == null)
+                {
+                    _comments = new ObservableCollection<SkyDriveComment>();
+                }
+                return _comments;
+            }
+            set
+            {
+                _comments = value;
+                NotifyPropertyChanged("Comments");
+            }
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="aSkyImage.UserControls.LoginPrompt"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:my="clr-namespace:Microsoft.Live.Controls;assembly=Microsoft.Live.Controls"
+             mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="120" d:DesignWidth="480">
+
+    <StackPanel x:Name="LayoutRoot" Orientation="Vertical" Background="{StaticResource PhoneBackgroundBrush}">
+        <TextBlock x:Name="PromptTitle" Text="{Binding Path=AppResources.LoginPromptTitle, Source={StaticResource LocalizedStrings}}"  Style="{StaticResource PhoneTextTitle2Style}" Margin="10,10,0,0"/>
+        <my:SignInButton Branding="Skydrive" Height="72" HorizontalAlignment="Center" Name="signInSkyDriveButton" Width="260" Scopes="wl.photos wl.skydrive_update wl.offline_access" SessionChanged="SignInSkyDriveButton_OnSessionChanged" />
+    </StackPanel>
+</UserControl>

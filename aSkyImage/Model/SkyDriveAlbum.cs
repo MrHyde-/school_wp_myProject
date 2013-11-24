@@ -30,6 +30,7 @@ namespace aSkyImage.ViewModel
             set
             {
                 _photos = value;
+                NotifyPropertyChanged("Photos");
             } 
         }
 
