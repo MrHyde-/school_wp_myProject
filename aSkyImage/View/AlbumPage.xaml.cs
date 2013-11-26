@@ -177,39 +177,6 @@ namespace aSkyImage.View
             return false;
         }
 
-        private void AppIconPin_OnClick(object sender, EventArgs e)
-        {
-            //need to create the tile(?)
-            // Application Tile is always the first Tile, even if it is not pinned to Start.
-            ShellTile TileToFind = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("AlbumPage.xaml"));
-
-            // Application should always be found
-            if (TileToFind == null)
-            {
-                // if Count was not entered, then assume a value of 0
-                int newCount = App.ViewModel.SelectedAlbum.Photos.Count;
-
-                // Set the properties to update for the Application Tile.
-                // Empty strings for the text values and URIs will result in the property being cleared.
-                StandardTileData NewTileData = new StandardTileData
-                {
-                    Title = "Your photos",
-                    BackgroundImage = new Uri("ApplicationIcon.png", UriKind.Relative),
-                    Count = newCount,
-                    //BackTitle = "Your albums",
-                    //BackBackgroundImage = new Uri("Background.png", UriKind.Relative),
-                    //BackContent = "content?"
-                };
-
-                // Update the Application Tile
-                ShellTile.Create(new Uri("/View/AlbumPage.xaml", UriKind.Relative), NewTileData);
-            }
-            else
-            {
-                MessageBox.Show("A tile exists already.");
-            }
-        }
-
         private void AppBarRefreshAlbum_OnClick(object sender, EventArgs e)
         {
             if (App.LiveSession == null)

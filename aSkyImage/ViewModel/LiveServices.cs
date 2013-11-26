@@ -140,7 +140,11 @@ namespace aSkyImage.ViewModel
             if (e.Error == null)
             {
                 SkyDriveAlbum album = (SkyDriveAlbum)e.UserState;
-                album.AlbumPicture = (string)e.Result["location"];
+                
+                if (e.Result.ContainsKey("location"))
+                {
+                    album.AlbumPicture = (string)e.Result["location"];
+                }
             }
         }
 
@@ -203,7 +207,7 @@ namespace aSkyImage.ViewModel
                 return;
             }
 
-            string uploadLocation = "/shared/transfers/Image" + DateTime.Now.Millisecond + ".jpg";
+            string uploadLocation = "/shared/transfers/Image" + DateTime.Now.Day + DateTime.Now.Millisecond + ".jpg";
             
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (o, args) =>
@@ -272,7 +276,7 @@ namespace aSkyImage.ViewModel
                 {
                     LiveConnectClient clientAlbum = new LiveConnectClient(App.LiveSession);
                     clientAlbum.GetCompleted += clientAlbum_GetCompleted;
-                    clientAlbum.GetAsync(SelectedAlbum.ID + "/photos?type=album");
+                    clientAlbum.GetAsync(SelectedAlbum.ID + "/photos");
                 }
             }
             else

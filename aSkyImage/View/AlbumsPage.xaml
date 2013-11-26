@@ -37,7 +37,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
                                 <!--Replace rectangle with image-->
-                                <Image Source="{Binding AlbumPicture}" Height="100" Width="100"  Margin="12,0,9,0"/>
+                                <Image x:Name="ImageAlbumPicture" Source="{Binding AlbumPicture}" Height="100" Width="100"  Margin="12,0,9,0"/>
                                 <StackPanel Width="311">
                                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
                                     <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
@@ -57,6 +57,7 @@
             <shell:ApplicationBarIconButton IconUri="/Images/Appbar/add.png" Text="desingTimeAddAlbum" x:Name="AppIconNewFolder" Click="AppIconNewFolder_OnClick"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="desingTimeRefresh" x:Name="AppBarRefreshAlbums" Click="AppBarRefreshAlbums_OnClick"/>
+                <shell:ApplicationBarMenuItem Text="desingTimePin" x:Name="AppBarPinProgram" Click="AppBarPinProgram_OnClick"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

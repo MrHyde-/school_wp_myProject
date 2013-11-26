@@ -12,6 +12,6 @@
 
     <StackPanel x:Name="LayoutRoot" Orientation="Vertical" Background="{StaticResource PhoneBackgroundBrush}">
         <TextBlock x:Name="PromptTitle" Text="{Binding Path=AppResources.LoginPromptTitle, Source={StaticResource LocalizedStrings}}"  Style="{StaticResource PhoneTextTitle2Style}" Margin="10,10,0,0"/>
-        <my:SignInButton Branding="Skydrive" Height="72" HorizontalAlignment="Center" Name="signInSkyDriveButton" Width="260" Scopes="wl.photos wl.skydrive_update wl.offline_access" SessionChanged="SignInSkyDriveButton_OnSessionChanged" />
+        <my:SignInButton Branding="Skydrive" Height="72" HorizontalAlignment="Center" Name="signInSkyDriveButton" Width="260" Scopes="wl.photos wl.skydrive_update wl.offline_access" SessionChanged="SignInSkyDriveButton_OnSessionChanged" ClientId="000000004C107340" />
     </StackPanel>
 </UserControl>
