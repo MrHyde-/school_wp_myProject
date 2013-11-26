@@ -213,6 +213,6 @@
     <value>Ok</value>
   </data>
   <data name="TileExistsAlready" xml:space="preserve">
-    <value>Ohjelma on jo lukitusnäytöllä.</value>
+    <value>Ohjelma on jo aloitusnäytöllä.</value>
   </data>
 </root>
