@@ -112,16 +112,16 @@ namespace aSkyImage.UserControls
                 if (_promtPage == PopupLogin.PhotoPage)
                 {
                     //refresh selectedphoto data
-                    App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+                    App.PhotoViewModel.LoadPhotoComments(App.PhotoViewModel.SelectedPhoto);
                 }
                 else if (_promtPage == PopupLogin.AlbumPage)
                 {
-                    App.ViewModel.AlbumDataLoaded = false;
-                    App.ViewModel.LoadAlbumData();
+                    App.AlbumViewModel.AlbumDataLoaded = false;
+                    App.AlbumViewModel.LoadSingleAlbumData();
                 }
                 else
                 {
-                    App.ViewModel.LoadData(true);
+                    App.AlbumsViewModel.LoadAlbumsData(true);
                 }
 
                 OnLoginCompleted();

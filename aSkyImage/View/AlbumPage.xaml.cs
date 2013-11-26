@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -27,18 +26,19 @@ namespace aSkyImage.View
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             LocalizeApplicationBar();
-            PageTitle.Text = App.ViewModel.SelectedAlbum.Title;
-            App.ViewModel.LoadAlbumData();
+            PageTitle.Text = App.AlbumViewModel.SelectedAlbum.Title;
+            App.AlbumViewModel.LoadSingleAlbumData();
 
-            if (App.ViewModel.SelectedPhoto == null)
+            if (App.PhotoViewModel.SelectedPhoto == null)
             {
                 if (ApplicationBar.Buttons.Count > 2)
                 {
+                    (ApplicationBar.Buttons[1] as ApplicationBarIconButton).IsEnabled = false;
                     (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = false;
                 }
             }
 
-            DataContext = App.ViewModel;
+            DataContext = App.AlbumViewModel;
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -51,12 +51,12 @@ namespace aSkyImage.View
                 //If was tombstoned check state
                 if (State.ContainsKey(App.SelectedAlbumKey))
                 {
-                    App.ViewModel.SelectedAlbum = (SkyDriveAlbum) State[App.SelectedAlbumKey];
+                    App.AlbumViewModel.SelectedAlbum = (SkyDriveAlbum) State[App.SelectedAlbumKey];
                     if (State.ContainsKey(App.SelectedAlbumPhotosKey))
                     {
-                        App.ViewModel.SelectedAlbum.Photos = (ObservableCollection<SkyDrivePhoto>)State[App.SelectedAlbumPhotosKey];
+                        App.AlbumViewModel.SelectedAlbum.Photos = (ObservableCollection<SkyDrivePhoto>)State[App.SelectedAlbumPhotosKey];
                     }
-                    App.ViewModel.AlbumDataLoaded = true;
+                    App.AlbumViewModel.AlbumDataLoaded = true;
                 }
 
                 ChangeApplicationBarIconStatus(false);
@@ -81,40 +81,41 @@ namespace aSkyImage.View
             if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
             {
                 // Save the Session variable in the page's State dictionary.
-                if (App.ViewModel != null)
+                if (App.AlbumsViewModel != null)
                 {
-                    if (App.ViewModel.SelectedAlbum != null)
+                    if (App.AlbumViewModel.SelectedAlbum != null)
                     {
-                        State[App.SelectedAlbumKey] = App.ViewModel.SelectedAlbum;
-                        State[App.SelectedAlbumPhotosKey] = App.ViewModel.SelectedAlbum.Photos;
+                        State[App.SelectedAlbumKey] = App.AlbumViewModel.SelectedAlbum;
+                        State[App.SelectedAlbumPhotosKey] = App.AlbumViewModel.SelectedAlbum.Photos;
                     }
                 }
             }
             else
             {
                 //without this we are not able to navigate straight back to same album..
-                App.ViewModel.SelectedAlbum.Photos.Clear(); 
-                App.ViewModel.SelectedAlbum = null;
+                App.AlbumViewModel.SelectedAlbum.Photos.Clear(); 
+                App.AlbumViewModel.SelectedAlbum = null;
             }
         }
 
         private void AppIconUpload_OnClick(object sender, EventArgs e)
         {
-            App.ViewModel.Upload();
+            App.AlbumViewModel.Upload();
         }
 
         private void PhotoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ViewLoginPromptIfSessionEnded() == false)
             {
-                if (App.ViewModel.SelectedPhoto != null)
+                if (App.PhotoViewModel.SelectedPhoto != null)
                 {
                     if (ApplicationBar.Buttons.Count > 2)
                     {
+                        (ApplicationBar.Buttons[1] as ApplicationBarIconButton).IsEnabled = true;
                         (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = true;
                     }
 
-                    App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+                    App.PhotoViewModel.LoadPhotoComments(App.PhotoViewModel.SelectedPhoto);
 
                     var selectedDataObject = e.AddedItems[0]; // assuming single selection
                     ChangeItemForegroundColor(selectedDataObject, Colors.Red);
@@ -139,14 +140,14 @@ namespace aSkyImage.View
 
         private void AppIconDownload_OnClick(object sender, EventArgs e)
         {
-            App.ViewModel.Download();
+            App.PhotoViewModel.Download();
         }
 
         private void AppIconShowImage_OnClick(object sender, EventArgs e)
         {
             if (ViewLoginPromptIfSessionEnded() == false)
             {
-                if (App.ViewModel.SelectedPhoto != null)
+                if (App.PhotoViewModel.SelectedPhoto != null)
                 {
                     //move to photo page
                     NavigationService.Navigate(new Uri("/View/PhotoPage.xaml", UriKind.Relative));
@@ -196,8 +197,8 @@ namespace aSkyImage.View
             }
             else
             {
-                App.ViewModel.AlbumDataLoaded = false;
-                App.ViewModel.LoadAlbumData();    
+                App.AlbumViewModel.AlbumDataLoaded = false;
+                App.AlbumViewModel.LoadSingleAlbumData();    
             }
         }
 

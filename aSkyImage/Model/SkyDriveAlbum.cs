@@ -10,7 +10,7 @@ namespace aSkyImage.ViewModel
     {
         public SkyDriveAlbum()
         {
-            this.Photos = new ObservableCollection<SkyDrivePhoto>();
+            Photos = new ObservableCollection<SkyDrivePhoto>();
         }
 
         private ObservableCollection<SkyDrivePhoto> _photos; 

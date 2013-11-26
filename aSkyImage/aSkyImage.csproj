@@ -98,9 +98,12 @@
     <Compile Include="UserControls\InputPrompt.xaml.cs">
       <DependentUpon>InputPrompt.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\LiveServices.cs" />
+    <Compile Include="ViewModel\AlbumsViewModel.cs" />
     <Compile Include="Model\SkyDriveAlbum.cs" />
     <Compile Include="Model\SkyDrivePhoto.cs" />
+    <Compile Include="ViewModel\AlbumViewModel.cs" />
+    <Compile Include="ViewModel\PhotoViewModel.cs" />
+    <Compile Include="ViewModel\SkyDriveViewModel.cs" />
     <Compile Include="View\AlbumPage.xaml.cs">
       <DependentUpon>AlbumPage.xaml</DependentUpon>
     </Compile>

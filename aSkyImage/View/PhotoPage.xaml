@@ -51,6 +51,7 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="AppBarAddComment" IconUri="/Images/Appbar/add.png" Text="AddComment" Click="ApplicationBarIconButton_OnClick"/>
+            <shell:ApplicationBarIconButton x:Name="AppBarDownload" IconUri="/Images/Appbar/download.png" Text="Download" Click="ApplicationBarDownloadButton_OnClick"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Refresh" x:Name="AppBarRefreshPhoto" Click="AppBarRefreshPhoto_OnClick"/>
             </shell:ApplicationBar.MenuItems>

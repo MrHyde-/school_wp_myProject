@@ -32,7 +32,7 @@
 
             <controls:PivotItem x:Name="albumPivot" Header="album">
                 <!--Double line list with text wrapping-->
-                <ListBox x:Name="AlbumListBox" SelectionChanged="AlbumListBox_SelectionChanged" SelectedItem="{Binding SelectedAlbum,Mode=TwoWay}"  Margin="0,0,-12,0" ItemsSource="{Binding Albums}">
+                <ListBox x:Name="AlbumListBox" SelectionChanged="AlbumListBox_SelectionChanged" SelectedItem="{Binding SelectedAlbum, Mode=TwoWay}"  Margin="0,0,-12,0" ItemsSource="{Binding Albums}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,17">

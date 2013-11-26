@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -38,6 +36,7 @@ namespace aSkyImage.View
             if (ApplicationBar.MenuItems.Count > 0)
             {
                 (ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).Text = AppResources.CommonRefresh;
+                (ApplicationBar.MenuItems[1] as ApplicationBarMenuItem).Text = AppResources.CommonPinToStart;
             }
         }
 
@@ -46,16 +45,16 @@ namespace aSkyImage.View
             //before loading we have to make sure we have LiveSession
             if (App.LiveSession == null)
             {
-                App.ViewModel.Albums = (ObservableCollection<SkyDriveAlbum>) State[App.AlbumsKey];
+                App.AlbumsViewModel.Albums = (ObservableCollection<SkyDriveAlbum>) State[App.AlbumsKey];
             }
             else
             {
                 AlbumListBox.SelectedItem = null;
-                App.ViewModel.SelectedAlbum = null;
-                App.ViewModel.LoadData();    
+                App.AlbumViewModel.SelectedAlbum = null;
+                App.AlbumsViewModel.LoadAlbumsData();    
             }
             
-            DataContext = App.ViewModel;
+            DataContext = App.AlbumsViewModel;
 
             UpdateLiveTileIfTileIsPresent();
         }
@@ -66,15 +65,15 @@ namespace aSkyImage.View
 
             if (TileToFind != null)
             {
-                if (App.ViewModel.Albums.Count > 1)
+                if (App.AlbumsViewModel.Albums.Count > 1)
                 {
                     WebClient backTileClient = new WebClient();
                     backTileClient.OpenReadCompleted += backTileClient_OnOpenReadCompleted;
 
                     Random random = new Random();
-                    int albumCoverToTileBack = random.Next(1, App.ViewModel.Albums.Count);
+                    int albumCoverToTileBack = random.Next(1, App.AlbumsViewModel.Albums.Count);
 
-                    backTileClient.OpenReadAsync(new Uri(App.ViewModel.Albums[albumCoverToTileBack].AlbumPicture));
+                    backTileClient.OpenReadAsync(new Uri(App.AlbumsViewModel.Albums[albumCoverToTileBack].AlbumPicture));
                 }
             }
         }
@@ -86,9 +85,9 @@ namespace aSkyImage.View
             if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
             {
                 // Save the Session variable in the page's State dictionary.
-                if (App.ViewModel != null)
+                if (App.AlbumsViewModel != null)
                 {
-                    State[App.AlbumsKey] = App.ViewModel.Albums;
+                    State[App.AlbumsKey] = App.AlbumsViewModel.Albums;
                 }
             }
             else
@@ -106,10 +105,10 @@ namespace aSkyImage.View
         {
             if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
             {
-                if (App.ViewModel.SelectedAlbum != null)
+                if (App.AlbumViewModel.SelectedAlbum != null)
                 {
-                    App.ViewModel.SelectedPhoto = null;
-                    App.ViewModel.AlbumDataLoaded = false;
+                    App.PhotoViewModel.SelectedPhoto = null;
+                    App.AlbumViewModel.AlbumDataLoaded = false;
                     NavigationService.Navigate(new Uri("/View/AlbumPage.xaml", UriKind.Relative));
                 }
             }
@@ -138,7 +137,7 @@ namespace aSkyImage.View
         {
             if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
             {
-                App.ViewModel.LoadData(true);    
+                App.AlbumsViewModel.LoadAlbumsData(true);    
             }
         }
 
@@ -168,18 +167,18 @@ namespace aSkyImage.View
             // Application should always be found
             if (TileToFind == null)
             {
-                if (App.ViewModel.Albums.Any())
+                if (App.AlbumsViewModel.Albums.Any())
                 {
                     //try to make image from the first albumpicture..
                     WebClient client = new WebClient();
                     client.OpenReadCompleted += ClientOnOpenReadCompleted;
 
-                    client.OpenReadAsync(new Uri(App.ViewModel.Albums.First().AlbumPicture));
+                    client.OpenReadAsync(new Uri(App.AlbumsViewModel.Albums.First().AlbumPicture));
                 }
             }
             else
             {
-                MessageBox.Show("A tile exists already.");
+                MessageBox.Show(AppResources.TileExistsAlready);
             }
         }
 

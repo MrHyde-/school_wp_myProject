@@ -138,6 +138,9 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>aSkyImage</value>
   </data>
+  <data name="CommonPinToStart" xml:space="preserve">
+    <value>Kiinnitä aloitusnäyttöön</value>
+  </data>
   <data name="CommonRefresh" xml:space="preserve">
     <value>Päivitä</value>
   </data>
@@ -208,5 +211,8 @@
   </data>
   <data name="PromptOk" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="TileExistsAlready" xml:space="preserve">
+    <value>Ohjelma on jo lukitusnäytöllä.</value>
   </data>
 </root>

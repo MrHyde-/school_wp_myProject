@@ -28,18 +28,45 @@ namespace aSkyImage
             }
         }
 
-        private static LiveServices _viewModel;
-        public static LiveServices ViewModel
+        private static AlbumsViewModel _albumsViewModel;
+        public static AlbumsViewModel AlbumsViewModel
         {
             get
             {
                 // Delay creation of the view model until necessary
-                if (_viewModel == null)
-                    _viewModel = new LiveServices();
+                if (_albumsViewModel == null)
+                    _albumsViewModel = new AlbumsViewModel();
 
-                return _viewModel;
+                return _albumsViewModel;
             }
         }
+
+        private static AlbumViewModel _albumViewModel;
+        public static AlbumViewModel AlbumViewModel
+        {
+            get
+            {
+                // Delay creation of the view model until necessary
+                if (_albumViewModel == null)
+                    _albumViewModel = new AlbumViewModel();
+
+                return _albumViewModel;
+            }
+        }
+
+        private static PhotoViewModel _photoViewModel;
+        public static PhotoViewModel PhotoViewModel
+        {
+            get
+            {
+                // Delay creation of the view model until necessary
+                if (_photoViewModel == null)
+                    _photoViewModel = new PhotoViewModel();
+
+                return _photoViewModel;
+            }
+        }
+
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>

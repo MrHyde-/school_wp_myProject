@@ -138,6 +138,9 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>aSkyImage</value>
   </data>
+  <data name="CommonPinToStart" xml:space="preserve">
+    <value>Pin to start</value>
+  </data>
   <data name="CommonRefresh" xml:space="preserve">
     <value>Refresh</value>
   </data>
@@ -195,7 +198,7 @@
     <value>Write your comment</value>
   </data>
   <data name="PhotoPageAppBarAddNewComment" xml:space="preserve">
-    <value>Add Comment</value>
+    <value>Comment</value>
   </data>
   <data name="PhotoPageImageCommentingDisabled" xml:space="preserve">
     <value>Image not shared, go to your skydrive www to share the image.</value>
@@ -208,5 +211,8 @@
   </data>
   <data name="PromptOk" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="TileExistsAlready" xml:space="preserve">
+    <value>A tile exists already.</value>
   </data>
 </root>

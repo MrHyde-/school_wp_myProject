@@ -23,9 +23,9 @@ namespace aSkyImage.View
 
         private void PhotoPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (App.ViewModel.SelectedPhoto != null)
+            if (App.PhotoViewModel.SelectedPhoto != null)
             {
-                if (App.ViewModel.SelectedPhoto.Title.Length > 30)
+                if (App.PhotoViewModel.SelectedPhoto.Title.Length > 30)
                 {
                     PhotoTitle.Style = (Style) Resources["PhoneTextTitle3Style"];
                 }
@@ -33,8 +33,9 @@ namespace aSkyImage.View
                 if (ApplicationBar.Buttons.Count > 0)
                 {
                     var addCommentButton = (ApplicationBar.Buttons[0] as ApplicationBarIconButton);
-                    addCommentButton.IsEnabled = App.ViewModel.SelectedPhoto.CommentingEnabled;
+                    addCommentButton.IsEnabled = App.PhotoViewModel.SelectedPhoto.CommentingEnabled;
                     addCommentButton.Text = AppResources.PhotoPageAppBarAddNewComment;
+                    (ApplicationBar.Buttons[1] as ApplicationBarIconButton).Text = AppResources.AlbumPageAppBarDownload;
                 }
 
                 if (ApplicationBar.MenuItems.Count > 0)
@@ -42,7 +43,7 @@ namespace aSkyImage.View
                     (ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).Text = AppResources.CommonRefresh;
                 }
 
-                DataContext = App.ViewModel.SelectedPhoto;
+                DataContext = App.PhotoViewModel.SelectedPhoto;
             }
         }
 
@@ -53,8 +54,8 @@ namespace aSkyImage.View
             //before loading we have to make sure we have LiveSession
             if (App.LiveSession == null)
             {
-                App.ViewModel.SelectedPhoto = (SkyDrivePhoto) State[App.SelectedPhotoKey];
-                App.ViewModel.SelectedPhoto.Comments = (ObservableCollection<SkyDriveComment>) State[App.SelectedPhotoCommentsKey];
+                App.PhotoViewModel.SelectedPhoto = (SkyDrivePhoto)State[App.SelectedPhotoKey];
+                App.PhotoViewModel.SelectedPhoto.Comments = (ObservableCollection<SkyDriveComment>)State[App.SelectedPhotoCommentsKey];
             }
         }
 
@@ -65,8 +66,8 @@ namespace aSkyImage.View
             if (e.NavigationMode != System.Windows.Navigation.NavigationMode.Back)
             {
                 // Save the Session variable in the page's State dictionary.
-                State[App.SelectedPhotoKey] = App.ViewModel.SelectedPhoto;
-                State[App.SelectedPhotoCommentsKey] = App.ViewModel.SelectedPhoto.Comments;
+                State[App.SelectedPhotoKey] = App.PhotoViewModel.SelectedPhoto;
+                State[App.SelectedPhotoCommentsKey] = App.PhotoViewModel.SelectedPhoto.Comments;
             }
             else
             {
@@ -92,10 +93,15 @@ namespace aSkyImage.View
 
         private void AppBarRefreshPhoto_OnClick(object sender, EventArgs e)
         {
-            if (App.ViewModel.SelectedPhoto != null)
+            if (App.PhotoViewModel.SelectedPhoto != null)
             {
-                App.ViewModel.LoadPhotoComments(App.ViewModel.SelectedPhoto);
+                App.PhotoViewModel.LoadPhotoComments(App.PhotoViewModel.SelectedPhoto);
             }
+        }
+
+        private void ApplicationBarDownloadButton_OnClick(object sender, EventArgs e)
+        {
+            App.PhotoViewModel.Download();
         }
     }
 }

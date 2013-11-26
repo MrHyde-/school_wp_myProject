@@ -124,6 +124,15 @@ namespace aSkyImage.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pin to start.
+        /// </summary>
+        public static string CommonPinToStart {
+            get {
+                return ResourceManager.GetString("CommonPinToStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string CommonRefresh {
@@ -286,7 +295,7 @@ namespace aSkyImage.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Comment.
+        ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string PhotoPageAppBarAddNewComment {
             get {
@@ -327,6 +336,15 @@ namespace aSkyImage.Resources {
         public static string PromptOk {
             get {
                 return ResourceManager.GetString("PromptOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A tile exists already..
+        /// </summary>
+        public static string TileExistsAlready {
+            get {
+                return ResourceManager.GetString("TileExistsAlready", resourceCulture);
             }
         }
     }

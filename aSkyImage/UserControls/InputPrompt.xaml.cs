@@ -104,10 +104,10 @@ namespace aSkyImage.UserControls
             switch (_action)
             {
                 case PopupAction.CreateAlbum:
-                    App.ViewModel.CreateAlbum(TextBoxUserInput.Text);
+                    App.AlbumsViewModel.CreateAlbum(TextBoxUserInput.Text);
                     break;
                 case PopupAction.AddCommentToPhoto:
-                    App.ViewModel.AddCommentToPhoto(TextBoxUserInput.Text);
+                    App.PhotoViewModel.AddCommentToPhoto(TextBoxUserInput.Text);
                     break;
             }
             
