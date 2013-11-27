@@ -98,7 +98,7 @@ namespace aSkyImage.ViewModel
 
         protected bool IsDataLoaded { get; set; }
 
-        private void GetAlbumPicture(SkyDriveAlbum albumItem)
+        public void GetAlbumPicture(SkyDriveAlbum albumItem)
         {
             if (albumItem != null)
             {

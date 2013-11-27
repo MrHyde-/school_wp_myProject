@@ -162,7 +162,6 @@
     <Content Include="Images\Appbar\folder.png" />
     <Content Include="Images\Appbar\zoom.png" />
     <Content Include="Images\Appbar\upload.png" />
-    <Content Include="README_FIRST.txt" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

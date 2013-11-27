@@ -16,13 +16,23 @@ namespace aSkyImage.UserControls
         public bool TitleShown { get { return _titleShown; } set { _titleShown = value; } }
 
         private PopupLogin _promtPage;
+        
+        #region eventsForSessionHandling
         public event EventHandler<EventArgs> LoginCompleted;
+        public event EventHandler<EventArgs> NoActiveSession;
 
         protected virtual void OnLoginCompleted()
         {
             EventHandler<EventArgs> handler = LoginCompleted;
             if (handler != null) handler(this, EventArgs.Empty);
         }
+
+        protected virtual void OnNoActiveSession()
+        {
+            EventHandler<EventArgs> handler = NoActiveSession;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+        #endregion eventsForSessionHandling
 
         public LoginPrompt()
         {
@@ -126,6 +136,14 @@ namespace aSkyImage.UserControls
 
                 OnLoginCompleted();
                 ClosePopup();
+            }
+            if (e.Status == LiveConnectSessionStatus.Unknown)
+            {
+                if (App.LiveSession != null)
+                {
+                    App.LiveSession = null;
+                }
+                OnNoActiveSession();
             }
         }
     }

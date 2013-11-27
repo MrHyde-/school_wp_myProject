@@ -11,34 +11,36 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" xmlns:my="clr-namespace:Microsoft.Live.Controls;assembly=Microsoft.Live.Controls"
+    shell:SystemTray.IsVisible="True"
     xmlns:userControls="clr-namespace:aSkyImage.UserControls">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer x:Name="ScrollViewerPhotoPage">
+        <Grid x:Name="LayoutRoot" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="10,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=AppResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="{Binding Path=AppResources.LoginTitle, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+            <!--TitlePanel contains the name of the application and page title-->
+            <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="10,17,0,28">
+                <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=AppResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
+                <TextBlock x:Name="PageTitle" Text="{Binding Path=AppResources.LoginTitle, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            </StackPanel>
 
-        <TextBlock Text="{Binding Path=AppResources.MainPageWelcomeText, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,10,0,0" Name="textBlockWelcome" Style="{StaticResource PhoneTextTitle2Style}" VerticalAlignment="Top" Grid.Row="1" />
-        <TextBlock Text="{Binding Path=AppResources.MainPageWelcomeInfo, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,60,0,0" Name="textBlockWelcomeInfo" Style="{StaticResource PhoneTextTitle3Style}" VerticalAlignment="Top" Grid.Row="2" />
+            <TextBlock Text="{Binding Path=AppResources.MainPageWelcomeText, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,10,0,0" Name="textBlockWelcome" Style="{StaticResource PhoneTextTitle2Style}" VerticalAlignment="Top" Grid.Row="1" />
+            <TextBlock Text="{Binding Path=AppResources.MainPageWelcomeInfo, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,60,0,0" Name="textBlockWelcomeInfo" Style="{StaticResource PhoneTextTitle3Style}" VerticalAlignment="Top" Grid.Row="2" />
 
-        <userControls:LoginPrompt Grid.Row="3" Margin="0, 250, 0, 0" TitleShown="False" LoginCompleted="viewModeldata_loaded" />
-        
-        <TextBlock Text="{Binding Path=AppResources.MainPageStatusTitle, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,393, 0,0" Name="textBlockApplicationStatus" Style="{StaticResource PhoneTextTitle3Style}" VerticalAlignment="Top" Grid.Row="4" />
-        <Border BorderBrush="Silver" BorderThickness="3" Grid.Row="5" Height="60" HorizontalAlignment="Center" Margin="0,420,0,0" Name="border1" VerticalAlignment="Top" Width="460">
-            <TextBlock Text="{Binding Path=AppResources.MainPageStatusPleaseLogin, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Center" Margin="0,0,0,0" Name="textBlockStatus" Style="{StaticResource PhoneTextLargeStyle}" VerticalAlignment="Center" />
-        </Border>
+            <userControls:LoginPrompt Grid.Row="3" Margin="0, 250, 0, 0" TitleShown="False" LoginCompleted="viewModeldata_loaded" NoActiveSession="viewModelData_noactiveSession" />
 
-        
-    </Grid>
+            <TextBlock Text="{Binding Path=AppResources.MainPageStatusTitle, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Margin="12,393, 0,0" Name="textBlockApplicationStatus" Style="{StaticResource PhoneTextTitle3Style}" VerticalAlignment="Top" Grid.Row="4" />
+            <Border BorderBrush="Silver" BorderThickness="3" Grid.Row="5" Height="60" HorizontalAlignment="Center" Margin="0,420,0,0" Name="border1" VerticalAlignment="Top" Width="460">
+                <TextBlock Text="{Binding Path=AppResources.MainPageStatusPleaseLogin, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Center" Margin="0,0,0,0" Name="textBlockStatus" Style="{StaticResource PhoneTextLargeStyle}" VerticalAlignment="Center" />
+            </Border>
+
+
+        </Grid>
+    </ScrollViewer>
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="False" IsMenuEnabled="False">

@@ -187,7 +187,7 @@ namespace aSkyImage.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Waiting login.
+        ///   Looks up a localized string similar to Please sign in.
         /// </summary>
         public static string MainPageStatusPleaseLogin {
             get {

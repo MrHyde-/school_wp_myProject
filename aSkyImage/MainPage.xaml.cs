@@ -34,5 +34,11 @@ namespace aSkyImage
         {
             NavigationService.Navigate(new Uri("/View/AlbumsPage.xaml", UriKind.Relative));
         }
+
+        private void viewModelData_noactiveSession(object sender, EventArgs e)
+        {
+            textBlockStatus.Text = AppResources.MainPageStatusPleaseLogin;
+            ApplicationBar.IsVisible = false;
+        }
     }
 }

@@ -160,7 +160,7 @@
     <value>Loading your albums..</value>
   </data>
   <data name="MainPageStatusPleaseLogin" xml:space="preserve">
-    <value>Waiting login</value>
+    <value>Please sign in</value>
   </data>
   <data name="MainPageStatusTitle" xml:space="preserve">
     <value>Status</value>

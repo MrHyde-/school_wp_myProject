@@ -108,6 +108,8 @@ namespace aSkyImage.ViewModel
             if (e.Error == null)
             {
                 MessageBox.Show(AppResources.MessageToUserImageUploaded);
+                App.AlbumsViewModel.GetAlbumPicture(App.AlbumsViewModel.SelectedAlbum);
+
                 Deployment.Current.Dispatcher.BeginInvoke(() => DownloadPictures(SelectedAlbum));
             }
         }

@@ -27,7 +27,7 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <ListBox Grid.Row="1" x:Name="PhotoListBox" SelectionChanged="PhotoListBox_SelectionChanged" SelectedItem="{Binding SelectedPhoto, Mode=TwoWay}"  Margin="0,0,0,0" ItemsSource="{Binding SelectedAlbum.Photos}" Height="530">
+        <ListBox Grid.Row="1" x:Name="PhotoListBox" SelectionChanged="PhotoListBox_SelectionChanged" SelectedItem="{Binding SelectedPhoto, Mode=TwoWay}"  Margin="2" ItemsSource="{Binding SelectedAlbum.Photos}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
