@@ -23,11 +23,7 @@ This version supports now following features:
 - Every screen (with popup also) is usable with Portrait or Landscape orientation
 - It can handle tombstoning but to continue using your application you have to refresh the page to sign in again
 
-![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)
-![albums view](http://users.metropolia.fi/~anttita/forWpRepo/repo002.PNG)
-![photos on single album](http://users.metropolia.fi/~anttita/forWpRepo/repo003.PNG)
-![single photo with comments](http://users.metropolia.fi/~anttita/forWpRepo/repo004.PNG)
-![pinned program to start](http://users.metropolia.fi/~anttita/forWpRepo/repo005.PNG)
+![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)![albums view](http://users.metropolia.fi/~anttita/forWpRepo/repo002.PNG)![photos on single album](http://users.metropolia.fi/~anttita/forWpRepo/repo003.PNG)![single photo with comments](http://users.metropolia.fi/~anttita/forWpRepo/repo004.PNG)![pinned program to start](http://users.metropolia.fi/~anttita/forWpRepo/repo005.PNG)
 
 How I get here and future plans
 ===============================
