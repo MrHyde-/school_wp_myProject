@@ -24,9 +24,21 @@ This version supports now following features:
 - It can handle tombstoning but to continue using your application you have to refresh the page to sign in again
 
 ![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)
+![albums view](http://users.metropolia.fi/~anttita/forWpRepo/repo002.PNG)
+![photos on single album](http://users.metropolia.fi/~anttita/forWpRepo/repo003.PNG)
+![single photo with comments](http://users.metropolia.fi/~anttita/forWpRepo/repo004.PNG)
+![pinned program to start](http://users.metropolia.fi/~anttita/forWpRepo/repo005.PNG)
 
 How I get here and future plans
 ===============================
+I started making frame to the project and added firstly localization support.
+
+Next steps was to implement the login and viewing images from the skydrive.
+
+So I attached the LiveSDK library.
 
 Used Libraries
 ===============================
+Microsoft Live Controls for handling the sesssion to the skydrive.
+Microsoft XNA Library is used ONLY for saving downloaded photo to the phone library.
+Microsoft toolkit is used for the application bar buttons and menu items
