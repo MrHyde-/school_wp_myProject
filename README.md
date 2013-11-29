@@ -20,6 +20,7 @@ This version supports now following features:
 - Localized to EN and FI languages
 - Pinning to start
 - Usable with both dark and light themes
+- Every screen (with popup also) is usable with Portrait or Landscape orientation
 - It can handle tombstoning but to continue using your application you have to refresh the page to sign in again
 
 
