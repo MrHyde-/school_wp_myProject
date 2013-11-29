@@ -23,7 +23,7 @@ This version supports now following features:
 - Every screen (with popup also) is usable with Portrait or Landscape orientation
 - It can handle tombstoning but to continue using your application you have to refresh the page to sign in again
 
-![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)![albums view](http://users.metropolia.fi/~anttita/forWpRepo/repo002.PNG)![photos on single album](http://users.metropolia.fi/~anttita/forWpRepo/repo003.PNG)![single photo with comments](http://users.metropolia.fi/~anttita/forWpRepo/repo004.PNG)![pinned program to start](http://users.metropolia.fi/~anttita/forWpRepo/repo005.PNG)
+![accept login](http://users.metropolia.fi/~anttita/WpRepo/repo001.PNG)![albums view](http://users.metropolia.fi/~anttita/WpRepo/repo002.PNG)![photos on single album](http://users.metropolia.fi/~anttita/WpRepo/repo003.PNG)![single photo with comments](http://users.metropolia.fi/~anttita/WpRepo/repo004.PNG)![pinned program to start](http://users.metropolia.fi/~anttita/WpRepo/repo005.PNG)
 
 What has been done and what could be the future plans
 ===============================
@@ -34,7 +34,11 @@ From UI Baseline it has splash screen, it is tappable, works with both themes an
 
 From the actual specifications there is login and logout features. User can take, upload and download pictures. User is also able to view single picture and set of pictures. From the other features Commenting (viewing and adding) has been implemented.
 
-First future plan is to solve the problem with the photo uploading with real device. Maybe need to go buy one to solve it actually.
+What was written in the project spefication document live tile has better features than expected. Did manage to get that custom image to work. It was quite hard at first.
+
+First future plan is to solve the problem with the photo uploading with real device. Maybe need to go buy one to solve it actually. Then add more features to the application. Example showing users quota status. Deleting albums and photos. Add albums inside albums. Rating photos etc. Lots of more could be done with selected api.
+
+One drawback with the commenting was the situation how commenting works on skydrive. If photos and albums are not added to shared folder the photos cannot be commented. From the web user can share albums to specific people by activating sharing with a link. When that has been done all photos added to that album can be commented. But if the albums is not shared the api cannot change the sharing settings for single photo or single album. That sharing is inheriting to the photos from the album so user has to share only the album to get the commenting to work with photos on that specified album.
 
 Used Libraries
 ===============================
