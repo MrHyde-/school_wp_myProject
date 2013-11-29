@@ -23,7 +23,10 @@ This version supports now following features:
 - Every screen (with popup also) is usable with Portrait or Landscape orientation
 - It can handle tombstoning but to continue using your application you have to refresh the page to sign in again
 
+![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)
 
 How I get here and future plans
 ===============================
 
+Used Libraries
+===============================
