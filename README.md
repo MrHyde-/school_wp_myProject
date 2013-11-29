@@ -25,13 +25,16 @@ This version supports now following features:
 
 ![accept login](http://users.metropolia.fi/~anttita/forWpRepo/repo001.PNG)![albums view](http://users.metropolia.fi/~anttita/forWpRepo/repo002.PNG)![photos on single album](http://users.metropolia.fi/~anttita/forWpRepo/repo003.PNG)![single photo with comments](http://users.metropolia.fi/~anttita/forWpRepo/repo004.PNG)![pinned program to start](http://users.metropolia.fi/~anttita/forWpRepo/repo005.PNG)
 
-How I get here and future plans
+What has been done and what could be the future plans
 ===============================
-I started making frame to the project and added firstly localization support.
+All default projects required features are implemented somehow. Some better than the others.
+It is Silverlight app for Windows Phone, localization ready, MVVM architectured. It uses windows phone navigation, tombstoning is handled, live tile can be made and it has application bars.
 
-Next steps was to implement the login and viewing images from the skydrive.
+From UI Baseline it has splash screen, it is tappable, works with both themes and utilizes Sileverlight toolkit for WP. From optionals it supports both orientations. Mandatory functionality can be found also, aSkyDrive utilizes SkyDrives RESTful api and user is able to do interactive action with the cloud service.
 
-So I attached the LiveSDK library.
+From the actual specifications there is login and logout features. User can take, upload and download pictures. User is also able to view single picture and set of pictures. From the other features Commenting (viewing and adding) has been implemented.
+
+First future plan is to solve the problem with the photo uploading with real device. Maybe need to go buy one to solve it actually.
 
 Used Libraries
 ===============================
