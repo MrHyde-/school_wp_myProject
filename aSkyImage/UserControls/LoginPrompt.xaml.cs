@@ -10,8 +10,12 @@ using aSkyImage.Model;
 
 namespace aSkyImage.UserControls
 {
+    /// <summary>
+    /// Custom control that holds the Microsoft.Live.Controls.SignInButton
+    /// </summary>
     public partial class LoginPrompt : UserControl
     {
+        //control is used also at the mainpage and we do not want to show the title there..
         private bool _titleShown = true;
         public bool TitleShown { get { return _titleShown; } set { _titleShown = value; } }
 
@@ -19,6 +23,7 @@ namespace aSkyImage.UserControls
         
         #region eventsForSessionHandling
         public event EventHandler<EventArgs> LoginCompleted;
+
         public event EventHandler<EventArgs> NoActiveSession;
 
         protected virtual void OnLoginCompleted()
@@ -48,8 +53,15 @@ namespace aSkyImage.UserControls
             InitializeComponent();
         }
 
+        /// <summary>
+        /// When control is loaded ensure things
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="routedEventArgs"></param>
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            //signInSkyDriveButton.ClientId = ;
+
             if (TitleShown == false)
             {
                 PromptTitle.Visibility = Visibility.Collapsed;
@@ -65,6 +77,11 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// After popup is loaded ensure that it is located correctly
+        /// </summary>
+        /// <param name="orientation"></param>
+        /// <param name="thisPopup"></param>
         private void SetPopupLocationAndProjectionByOrientation(PageOrientation orientation, Popup thisPopup)
         {
             if (orientation == PageOrientation.LandscapeLeft || orientation == PageOrientation.LandscapeRight)
@@ -84,6 +101,11 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// Event that is called when orientation changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnOrientationChanged(object sender, OrientationChangedEventArgs e)
         {
             Popup thisPopup = this.Parent as Popup;
@@ -93,6 +115,12 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// Sets projections and offsets to popup to keep it in the top of the screen
+        /// </summary>
+        /// <param name="thisPopup"></param>
+        /// <param name="rotationZ"></param>
+        /// <param name="verticalOffset"></param>
         private void SetPopupOffsetsToLandscape(Popup thisPopup, double rotationZ, double verticalOffset, double horisontalOffset)
         {
             var planeProjection = new PlaneProjection();
@@ -112,6 +140,11 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// When user sign in make sure to start data loading and refresh correct page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SignInSkyDriveButton_OnSessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
         {
             if (e.Status == LiveConnectSessionStatus.Connected)
@@ -137,8 +170,10 @@ namespace aSkyImage.UserControls
                 OnLoginCompleted();
                 ClosePopup();
             }
+
             if (e.Status == LiveConnectSessionStatus.Unknown)
             {
+                //this hapens because tombstoning, because LiveConnectSession is not serializable we have to ensure that we close the inactive connection
                 if (App.LiveSession != null)
                 {
                     App.LiveSession = null;

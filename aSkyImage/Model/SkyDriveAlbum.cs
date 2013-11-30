@@ -5,6 +5,9 @@ using System.Runtime.Serialization;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// DataObject for albums in SkyDrive
+    /// </summary>
     [DataContract]
     public class SkyDriveAlbum : INotifyPropertyChanged
     {
@@ -15,7 +18,7 @@ namespace aSkyImage.ViewModel
 
         private ObservableCollection<SkyDrivePhoto> _photos; 
         /// <summary>
-        /// A collection for ItemViewModel objects.
+        /// A collection of photos in this album
         /// </summary>
         public ObservableCollection<SkyDrivePhoto> Photos 
         { 

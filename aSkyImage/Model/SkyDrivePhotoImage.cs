@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace aSkyImage.Model
 {
+    /// <summary>
+    /// DataObject for photo properties (response contains 2 to 4 of these)
+    /// </summary>
     [DataContract]
     public class SkyDrivePhotoImage
     {

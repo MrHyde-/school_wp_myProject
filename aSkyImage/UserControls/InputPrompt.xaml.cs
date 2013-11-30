@@ -7,6 +7,9 @@ using Microsoft.Phone.Controls;
 
 namespace aSkyImage.UserControls
 {
+    /// <summary>
+    /// Popup class to display input field with custom title
+    /// </summary>
     public partial class InputPrompt : UserControl
     {
         private String _caption;
@@ -16,6 +19,11 @@ namespace aSkyImage.UserControls
             InitializeComponent();
         }
 
+        /// <summary>
+        /// constructor for the popup
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="action"></param>
         public InputPrompt(string title, PopupAction action)
         {
             Loaded += OnLoaded;
@@ -24,6 +32,11 @@ namespace aSkyImage.UserControls
             InitializeComponent();
         }
 
+        /// <summary>
+        /// After popup is loaded attach event for orientation change support and set title
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="routedEventArgs"></param>
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             Popup thisPopup = this.Parent as Popup;
@@ -39,6 +52,11 @@ namespace aSkyImage.UserControls
             PromptTitle.Text = _caption;
         }
 
+        /// <summary>
+        /// After popup is loaded ensure that it is located correctly
+        /// </summary>
+        /// <param name="orientation"></param>
+        /// <param name="thisPopup"></param>
         private void SetPopupLocationAndProjectionByOrientation(PageOrientation orientation, Popup thisPopup)
         {
             if (orientation == PageOrientation.LandscapeLeft || orientation == PageOrientation.LandscapeRight)
@@ -60,6 +78,11 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// Event that is called when orientation changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnOrientationChanged(object sender, OrientationChangedEventArgs e)
         {
             Popup thisPopup = this.Parent as Popup;
@@ -69,6 +92,13 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// Sets projections and offsets to popup to keep it in the top of the screen
+        /// </summary>
+        /// <param name="thisPopup"></param>
+        /// <param name="rotationZ"></param>
+        /// <param name="verticalOffset"></param>
+        /// <param name="horisontalOffset"></param>
         private void SetPopupOffsetsToLandscape(Popup thisPopup, double rotationZ, double verticalOffset, double horisontalOffset)
         {
             var planeProjection = new PlaneProjection();
@@ -78,11 +108,19 @@ namespace aSkyImage.UserControls
             thisPopup.HorizontalOffset = horisontalOffset;
         }
 
+        /// <summary>
+        /// Event that occurs when users cancels his popup action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
         {
             ClosePopup();
         }
 
+        /// <summary>
+        /// Method for closing the popup
+        /// </summary>
         private void ClosePopup()
         {
             Popup thisPopup = this.Parent as Popup;
@@ -93,6 +131,11 @@ namespace aSkyImage.UserControls
             }
         }
 
+        /// <summary>
+        /// Event that occurs when users confirms his popup action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
         {
             if (String.IsNullOrEmpty(TextBoxUserInput.Text))
@@ -115,6 +158,9 @@ namespace aSkyImage.UserControls
         }
     }
 
+    /// <summary>
+    /// Enumeration to define which method has opened the popup to define what action is called when users presses ok button
+    /// </summary>
     public enum PopupAction
     {
         Undefined = 0,

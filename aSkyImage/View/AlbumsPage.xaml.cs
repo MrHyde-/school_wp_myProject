@@ -17,8 +17,12 @@ using aSkyImage.ViewModel;
 
 namespace aSkyImage.View
 {
+    /// <summary>
+    /// View that displays users albums with coverphotos
+    /// </summary>
     public partial class AlbumsPage : PhoneApplicationPage
     {
+        //pages popup, to add new album or to sign in
         private Popup _popup = null;
 
         public AlbumsPage()
@@ -27,6 +31,11 @@ namespace aSkyImage.View
             Loaded += OnLoaded;
         }
 
+        /// <summary>
+        /// After page is loaded load album data, localize the application bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="routedEventArgs"></param>
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             if (ApplicationBar.Buttons.Count > 0)
@@ -40,6 +49,10 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// When user navigates to albums load data or restore it from the state (tombstone)
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             //before loading we have to make sure we have LiveSession
@@ -59,6 +72,9 @@ namespace aSkyImage.View
             UpdateLiveTileIfTileIsPresent();
         }
 
+        /// <summary>
+        /// Method for updating random cover photo to livetile if it is present and user has more than one album
+        /// </summary>
         private void UpdateLiveTileIfTileIsPresent()
         {
             ShellTile TileToFind = FindASkyImageLiveTile();
@@ -78,6 +94,10 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// when user navigates away from this page save some information to the appstate (tombstone)
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
             // If this is a back navigation, the page will be discarded, so there
@@ -101,6 +121,11 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// Event that occurs when users selects album from the albums listbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AlbumListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
@@ -114,17 +139,24 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// When user pushes add button on the application bar show popup to ask the name to that new popup
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AppIconNewFolder_OnClick(object sender, EventArgs e)
         {
+            //ensure that we have a live sessoin so this trick is possible
             if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
             {
-
+                //if there is already a popup close it
                 if (_popup != null)
                 {
                     _popup.IsOpen = false;
                     _popup = null;
                 }
 
+                //open new popup
                 _popup = new Popup()
                     {
                         IsOpen = true,
@@ -133,6 +165,11 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// Event for user pressing the refresh from the application bar menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AppBarRefreshAlbums_OnClick(object sender, EventArgs e)
         {
             if (ViewLoginPromptIfSessionEnded(PopupLogin.AlbumsPage) == false)
@@ -141,6 +178,10 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// Show login prompt if session is ended
+        /// </summary>
+        /// <param name="popupLogin"></param>
         private bool ViewLoginPromptIfSessionEnded(PopupLogin popupLogin)
         {
             if (App.LiveSession == null)
@@ -158,15 +199,20 @@ namespace aSkyImage.View
             return false;
         }
 
+        /// <summary>
+        /// Event for user pinning the program to the start page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eargs"></param>
         private void AppBarPinProgram_OnClick(object sender, EventArgs eargs)
         {
             //need to create the tile(?)
-            // Application Tile is always the first Tile, even if it is not pinned to Start.
             ShellTile TileToFind = FindASkyImageLiveTile();
 
-            // Application should always be found
+            // if there are no tile we can create new
             if (TileToFind == null)
             {
+                //tile is created only if user has albums.. ehm?
                 if (App.AlbumsViewModel.Albums.Any())
                 {
                     //try to make image from the first albumpicture..
@@ -182,11 +228,19 @@ namespace aSkyImage.View
             }
         }
 
+        /// <summary>
+        /// Find applications LiveTile method because of the string MainPage.xaml..
+        /// </summary>
         private static ShellTile FindASkyImageLiveTile()
         {
             return ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("MainPage.xaml"));
         }
 
+        /// <summary>
+        /// Event for really creating the tile after album cover image has been fetched
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ClientOnOpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
         {
             //for accessing isolated storage
@@ -199,7 +253,7 @@ namespace aSkyImage.View
             const string shellContentDirectory = "Shared\\ShellContent";
             userStore.CreateDirectory(shellContentDirectory);
 
-            //render the UIElement into a writeable bitmap 
+            //render the UIElement into a writeable bitmap, with actual tile size
             WriteableBitmap bmp = new WriteableBitmap(173, 173);
             bmp.SetSource(e.Result);
 
@@ -223,6 +277,11 @@ namespace aSkyImage.View
             ShellTile.Create(navigationUri, data);
         }
 
+        /// <summary>
+        /// Event for creating the tiles backbackground.. backback for serious MS?
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backTileClient_OnOpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
         {
             //first make sure that we have the tile still there

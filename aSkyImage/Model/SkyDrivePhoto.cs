@@ -7,6 +7,9 @@ using aSkyImage.Model;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// DataObject for skydrive photos
+    /// </summary>
     [DataContract]
     public class SkyDrivePhoto : INotifyPropertyChanged
     {
@@ -145,7 +148,7 @@ namespace aSkyImage.ViewModel
 
         private ObservableCollection<SkyDriveComment> _comments;
         /// <summary>
-        /// A collection for ItemViewModel objects.
+        /// A collection of comments in photo
         /// </summary>
         public ObservableCollection<SkyDriveComment> Comments
         {

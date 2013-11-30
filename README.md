@@ -36,12 +36,17 @@ From the actual specifications there is login and logout features. User can take
 
 What was written in the project spefication document live tile has better features than expected. Did manage to get that custom image to work. It was quite hard at first.
 
-First future plan is to solve the problem with the photo uploading with real device. Maybe need to go buy one to solve it actually. Then add more features to the application. Example showing users quota status. Deleting albums and photos. Add albums inside albums. Rating photos etc. Lots of more could be done with selected api.
+First future plan is to solve the problem with the photo uploading with real device. Maybe need to go buy one to solve it actually. One improvement area is network usage, now this app do not cache any images and maybe it should. Adding progress bars would make user happier so that also. Then some arrangements about when data is loaded and when user is navigated to other page. Then add more features to the application. Example showing users quota status. Deleting albums and photos. Add albums inside albums. Rating photos etc. Lots of more could be done with selected api.
 
 One drawback with the commenting was the situation how commenting works on skydrive. If photos and albums are not added to shared folder the photos cannot be commented. From the web user can share albums to specific people by activating sharing with a link. When that has been done all photos added to that album can be commented. But if the albums is not shared the api cannot change the sharing settings for single photo or single album. That sharing is inheriting to the photos from the album so user has to share only the album to get the commenting to work with photos on that specified album.
+
+There is also places where refactoring should be made. Example superclass for the popups and models and some even for the views..
 
 Used Libraries
 ===============================
 Microsoft Live Controls for handling the sesssion to the skydrive.
 Microsoft XNA Library is used ONLY for saving downloaded photo to the phone library.
 Microsoft toolkit is used for the application bar buttons and menu items
+
+REST reference for the SkyDrive api
+http://msdn.microsoft.com/en-us/library/live/hh243648.aspx

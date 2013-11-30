@@ -12,6 +12,9 @@ using aSkyImage.Resources;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// ViewModel to handle Photo data transferring
+    /// </summary>
     public class PhotoViewModel : SkyDriveViewModel
     {
         private SkyDrivePhoto _selectedPhoto;
@@ -32,28 +35,46 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Method to add comment to the skydrive cloud
+        /// </summary>
+        /// <param name="comment"></param>
         public void AddCommentToPhoto(string comment)
         {
+            //create object that skydrive api accepts
             var commentData = new Dictionary<string, object>();
             commentData.Add("message", comment);
 
+            //create the client and make the post
             LiveConnectClient addCommentClient = new LiveConnectClient(App.LiveSession);
             addCommentClient.PostCompleted += addCommentClient_OnPostComleted;
             addCommentClient.PostAsync(App.PhotoViewModel.SelectedPhoto.ID + "/comments", commentData);
         }
 
+        /// <summary>
+        /// When Comments post action returns
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void addCommentClient_OnPostComleted(object sender, LiveOperationCompletedEventArgs e)
         {
+            //if all went fine
             if (e.Error == null)
             {
                 if (SelectedPhoto != null)
                 {
+                    //refresh comments so user can see what he just did
                     LoadPhotoComments(SelectedPhoto);
                 }
+                //inform user that comment has been added
                 MessageBox.Show(AppResources.MessageToUserCommentAdded);
             }
         }
 
+        /// <summary>
+        /// GET Method to read photo comments from the skydrive
+        /// </summary>
+        /// <param name="selectedPhoto"></param>
         public void LoadPhotoComments(SkyDrivePhoto selectedPhoto)
         {
             LiveConnectClient readPhotoComments = new LiveConnectClient(App.LiveSession);
@@ -61,8 +82,14 @@ namespace aSkyImage.ViewModel
             readPhotoComments.GetAsync(selectedPhoto.ID + "/comments");
         }
 
+        /// <summary>
+        /// Event after get comments return
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void readPhotoComments_OnCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
+            //if all went fine
             if (e.Error == null)
             {
                 var photosJson = e.RawResult;
@@ -107,8 +134,12 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Method that occurs when users want to download the single image (album or photo view)
+        /// </summary>
         public void Download()
         {
+            //there has to be selected photo to download it..
             if (App.PhotoViewModel.SelectedPhoto == null)
             {
                 MessageBox.Show(AppResources.MessageToUserPleaseSelectPhotoFirst);
@@ -120,6 +151,10 @@ namespace aSkyImage.ViewModel
             downloadClient.DownloadAsync(App.PhotoViewModel.SelectedPhoto.ID + "/content");
         }
 
+        /// <summary>
+        /// When photo is downloaded save it to the phones medialibrary (XNA..)
+        /// </summary>
+        /// <param name="selectedPhoto"></param>
         private void DownloadClientOnDownloadCompleted(object sender, LiveDownloadCompletedEventArgs e)
         {
             if (e.Result != null)

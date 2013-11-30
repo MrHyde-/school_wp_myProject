@@ -12,6 +12,9 @@ using aSkyImage.Resources;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// ViewModel to handle Album data transferring
+    /// </summary>
     public class AlbumViewModel : SkyDriveViewModel
     {
         private SkyDriveAlbum _selectedAlbum;
@@ -46,6 +49,9 @@ namespace aSkyImage.ViewModel
             set { App.PhotoViewModel.SelectedPhoto = value; }
         }
 
+        /// <summary>
+        /// When user wants to add image to his album
+        /// </summary>
         internal void Upload()
         {
             PhotoChooserTask photoChooserTask = new PhotoChooserTask();
@@ -54,6 +60,9 @@ namespace aSkyImage.ViewModel
             photoChooserTask.Show();
         }
 
+        /// <summary>
+        /// After user has selected the photo it will be uploaded to the skydrive
+        /// </summary>
         private void photoChooserTask_Completed(object sender, PhotoResult e)
         {
             if (e.ChosenPhoto == null)
@@ -95,6 +104,7 @@ namespace aSkyImage.ViewModel
                     }
                 }
 
+                //inform user that photo will be uploaded
                 MessageBox.Show(String.Format(AppResources.MessageToUserUploadingImageToAlbum, SelectedAlbum.Title));
 
                 uploadClient.BackgroundUploadAsync(SelectedAlbum.ID, new Uri(uploadLocation, UriKind.RelativeOrAbsolute), OverwriteOption.Rename, userState);
@@ -103,17 +113,28 @@ namespace aSkyImage.ViewModel
             worker.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// event for uploading completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void uploadClient_BackgroundUploadCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error == null)
             {
+                //if all went fine inform user
                 MessageBox.Show(AppResources.MessageToUserImageUploaded);
                 App.AlbumsViewModel.GetAlbumPicture(App.AlbumsViewModel.SelectedAlbum);
 
+                //refresh images so user is able see the new photo
                 Deployment.Current.Dispatcher.BeginInvoke(() => DownloadPictures(SelectedAlbum));
             }
         }
 
+        /// <summary>
+        /// Get albums photos from the cloud
+        /// </summary>
+        /// <param name="albumItem"></param>
         private void DownloadPictures(SkyDriveAlbum albumItem)
         {
             if (albumItem != null)
@@ -124,6 +145,9 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Get albums photos from the cloud (the actual cloud call)
+        /// </summary>
         internal void LoadSingleAlbumData()
         {
             if (SelectedAlbum != null)
@@ -141,8 +165,14 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        //helper if data is already loaded etc..
         internal bool AlbumDataLoaded { get; set; }
 
+        /// <summary>
+        /// When data is loaded from the cloud make objects from the JSON
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clientAlbum_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -184,19 +214,25 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Get thumbnail picture for the photo
+        /// </summary>
+        /// <param name="photoItem"></param>
         private void GetPhotoThumbnailPicture(SkyDrivePhoto photoItem)
         {
             if (photoItem != null)
             {
                 if (String.IsNullOrEmpty(photoItem.ID) == false)
                 {
+                    //if photo has thumbnail url use it
                     var tnurl = photoItem.PhotoImages.FirstOrDefault(x => x.Type == "thumbnail");
                     if (tnurl != null)
                     {
                         photoItem.PhotoThumbnailUrl = tnurl.Source;
                         return;
                     }
-
+                    
+                    //if photo has album url use it
                     tnurl = photoItem.PhotoImages.FirstOrDefault(x => x.Type == "album");
                     if (tnurl != null)
                     {
@@ -204,6 +240,7 @@ namespace aSkyImage.ViewModel
                         return;
                     }
 
+                    //if not anything above get small size image for the photo
                     LiveConnectClient photoThumbnailClient = new LiveConnectClient(App.LiveSession);
                     photoThumbnailClient.GetCompleted += photoThumbnailClient_GetCompleted;
                     photoThumbnailClient.GetAsync(photoItem.ID + "/picture?type=small", photoItem);
@@ -211,10 +248,16 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Get thumbnail picture for the photo completed event from the cloud
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void photoThumbnailClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error == null)
             {
+                //if there are no error retrieve location param from the result
                 SkyDrivePhoto photo = (SkyDrivePhoto)e.UserState;
                 photo.PhotoThumbnailUrl = (string)e.Result["location"];
             }

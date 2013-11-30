@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace aSkyImage.Model
 {
+    /// <summary>
+    /// DataObject for photo comments in the skydrive json
+    /// </summary>
     [DataContract]
     public class SkyDriveComment
     {

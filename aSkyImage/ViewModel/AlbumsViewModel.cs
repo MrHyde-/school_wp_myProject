@@ -10,6 +10,9 @@ using aSkyImage.Resources;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// ViewModel to handle Albums data transferring
+    /// </summary>
     public class AlbumsViewModel : SkyDriveViewModel
     {
         public ObservableCollection<SkyDriveAlbum> Albums { get; set; }
@@ -34,8 +37,9 @@ namespace aSkyImage.ViewModel
         }
 
         /// <summary>
-        /// Creates and adds a few ItemViewModel objects into the Items collection.
+        /// Calls method that reads users albums from the cloud if necessary
         /// </summary>
+        /// <param name="refreshData"></param>
         public void LoadAlbumsData(bool refreshData = false)
         {
             if (refreshData)
@@ -47,6 +51,9 @@ namespace aSkyImage.ViewModel
             IsDataLoaded = true;
         }
 
+        /// <summary>
+        /// Actual get caller
+        /// </summary>
         private void GetUserAlbumsData()
         {
             if (IsDataLoaded == false)
@@ -57,6 +64,11 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Event which handles returning albums json
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clientAlbums_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -79,7 +91,6 @@ namespace aSkyImage.ViewModel
                 try
                 {
                     var list = (SkyDriveAlbumList)ser.ReadObject(ms);
-                    //Albums = list.SkyDriveAlbums;
 
                     foreach (var album in list.SkyDriveAlbums)
                     {
@@ -93,11 +104,16 @@ namespace aSkyImage.ViewModel
                 }
             }
             
+            //rise event so mainpage knows when data is actually loaded
             OnDataLoaded();
         }
 
         protected bool IsDataLoaded { get; set; }
 
+        /// <summary>
+        /// Calls cloud to return the url to albums picture and because skydrive it is the latest added photo
+        /// </summary>
+        /// <param name="albumItem"></param>
         public void GetAlbumPicture(SkyDriveAlbum albumItem)
         {
             if (albumItem != null)
@@ -111,6 +127,11 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// event for getting albums album picture
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void albumPictureClient_GetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error == null)
@@ -124,6 +145,10 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        /// <summary>
+        /// Method to add album to the skydrive cloud
+        /// </summary>
+        /// <param name="albumName"></param>
         public void CreateAlbum(string albumName)
         {
             LiveConnectClient albumClient = new LiveConnectClient(App.LiveSession);
@@ -133,16 +158,28 @@ namespace aSkyImage.ViewModel
             albumClient.PostAsync("/me/albums", albumData);
         }
 
+        /// <summary>
+        /// event for completing the post call
+        /// </summary>
+        /// <param name="comment"></param>
         private void albumClient_PostCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
             if (e.Error == null)
             {
                 string newAlbumJson = e.RawResult;
+
+                //when album is created add it to the collection (do not load every album again)
                 InsertNewAlbumToAlbumsCollection(newAlbumJson);
+
+                //inform user that album has been created
                 MessageBox.Show(AppResources.MessageToUserAlbumCreated);
             }
         }
 
+        /// <summary>
+        /// Method to read the added album from the json and adds it to the collection of albums
+        /// </summary>
+        /// <param name="comment"></param>
         private void InsertNewAlbumToAlbumsCollection(string newAlbumJson)
         {
             using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(newAlbumJson)))
@@ -168,6 +205,7 @@ namespace aSkyImage.ViewModel
             }
         }
 
+        //skeleton for the OnDataLoaded event
         public event EventHandler<EventArgs> DataLoaded;
 
         protected virtual void OnDataLoaded()

@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace aSkyImage.Model
 {
+    /// <summary>
+    /// DataObject to discover is it possible to add comments to photos
+    /// </summary>
     [DataContract]
     public class SkyDriveAccess
     {

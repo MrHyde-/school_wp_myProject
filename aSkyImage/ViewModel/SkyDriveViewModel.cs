@@ -3,6 +3,9 @@ using System.ComponentModel;
 
 namespace aSkyImage.ViewModel
 {
+    /// <summary>
+    /// SuperClass for ViewModels
+    /// </summary>
     public class SkyDriveViewModel
     {
         #region INPC
